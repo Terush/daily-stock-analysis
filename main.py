@@ -112,7 +112,8 @@ def analyze_stock_combined(ticker):
             else: result["総合判断"] = "警戒：買われすぎ"
         else:
             result["総合判断"] = "様子見"
-            result["company_name"] = get_company_name(ticker)   # ←追加
+        
+        result["company_name"] = get_company_name(ticker)   # ←追加
         return result
     except Exception as e:
         print(f"Error processing {ticker}: {e}")
