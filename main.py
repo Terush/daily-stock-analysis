@@ -181,6 +181,17 @@ if not df_results.empty:
 
     # HTML生成（スマホでも見やすいCSS付き）
     html_table = df_picks.to_html(index=False, classes="table_style", border=0)
+
+    description = """
+    <h2>📌 この表について</h2>
+    <ul>
+    <li>現在の株価が過去と比べて割高か割安かを表示しています。</li>
+    <li>過去の値動きから標準偏差(σ)を計算し、現在の価格位置を判定しています。</li>
+    <li>移動平均とRSIも加味して、買われすぎ・売られすぎ・中立を整理しています。</li>
+    <li>統計的な位置づけで判断するため、移動平均線やRSI単独よりも位置感が見やすい特徴があります。</li>
+    <li>過去データに基づく計算のため、急変相場では精度が落ちる場合があります。</li>
+    </ul>
+    """
     
     # --- 注意書きをHTML用に埋め込み ---
     disclaimer = """
@@ -229,6 +240,15 @@ if not df_results.empty:
             .table_style td {{ padding: 10px; border-bottom: 1px solid #ddd; }}
             .table_style tr:nth-child(even) {{ background-color: #f9f9f9; }}
             .table-container {{ overflow-x: auto; }}
+
+            .description {
+                background: #eef5ff;
+                border-left: 5px solid #3a78ff;
+                padding: 15px;
+                margin-bottom: 25px;
+                line-height: 1.6;
+                font-size: 0.9em;
+            }
     
             /* 注意書きのデザイン */
             .disclaimer {{
@@ -245,6 +265,9 @@ if not df_results.empty:
     <body>
         <h1>📈 日本株 朝イチ分析レポート</h1>
         <div class="update-time">最終更新: {now_str} (JST)</div>
+        <div class="description">
+            {description}
+        </div>
         <div class="table-container">
             {html_table}
         </div>
