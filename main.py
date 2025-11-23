@@ -182,6 +182,34 @@ if not df_results.empty:
     # HTML生成（スマホでも見やすいCSS付き）
     html_table = df_picks.to_html(index=False, classes="table_style", border=0)
     
+    # --- 注意書きをHTML用に埋め込み ---
+    disclaimer = """
+    【ゆるい注意書き（株とかぶを混ぜました）】
+    
+    この分析結果は、作者が「たぶん合ってる…はず…？」と願いながら育てたものです。
+    大根のようにまっすぐでもなく、ほうれん草のように栄養満点でもなく、
+    たぶん“かぶ”くらいの信頼度です。つまり、食べられるけど万能ではありません。
+    
+    計算式はマジメですが、作者の数学力・プログラミング力・投資センスは
+    かぶの葉っぱくらいの頼りなさです。
+    見た目は立派でも、油断するとベランダで萎れます。
+    
+    このツールは過去データを勝手に計算しているだけで、
+    未来を当てるものではありません。
+    株価は食べるかぶよりずっと気まぐれで、
+    時々こちらを笑いながら地中深く潜ります。
+    
+    この情報を信じて大損しても、
+    作者は画面の前で「えっ…ごめん…」と申し訳なさメンタルに漬かるだけで、
+    損失を補填する能力はありません。
+    
+    投資判断は必ずあなた自身の頭（たぶんかぶより賢い）でお願いします。
+    そして、このツールの無断転載・販売・「この人が推奨してました！」とSNSで晒す行為は
+    ぬか漬けに生クリームを入れるくらいやめたほうがいい行為です。
+    
+    ほどよく使い、ほどよく疑い、ほどよく笑ってください。
+    """
+    
     html_content = f"""
     <!DOCTYPE html>
     <html lang="ja">
@@ -200,8 +228,18 @@ if not df_results.empty:
             .table_style th {{ background-color: #007bff; color: #fff; padding: 10px; text-align: left; }}
             .table_style td {{ padding: 10px; border-bottom: 1px solid #ddd; }}
             .table_style tr:nth-child(even) {{ background-color: #f9f9f9; }}
-            /* スマホ対応: 横スクロール */
             .table-container {{ overflow-x: auto; }}
+    
+            /* 注意書きのデザイン */
+            .disclaimer {{
+                margin-top: 40px;
+                padding: 20px;
+                background: #fff6dc;
+                border-left: 6px solid #f0b400;
+                white-space: pre-wrap;
+                font-size: 0.85em;
+                line-height: 1.6em;
+            }}
         </style>
     </head>
     <body>
@@ -210,6 +248,7 @@ if not df_results.empty:
         <div class="table-container">
             {html_table}
         </div>
+        <div class="disclaimer">{disclaimer}</div>
     </body>
     </html>
     """
