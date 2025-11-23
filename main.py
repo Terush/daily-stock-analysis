@@ -112,6 +112,7 @@ def analyze_stock_combined(ticker):
             else: result["総合判断"] = "警戒：買われすぎ"
         else:
             result["総合判断"] = "様子見"
+            result["company_name"] = get_company_name(ticker)   # ←追加
         return result
     except Exception as e:
         print(f"Error processing {ticker}: {e}")
@@ -158,7 +159,7 @@ df_results = pd.DataFrame(results)
 os.makedirs("public", exist_ok=True)
 
 if not df_results.empty:
-    first_cols = ["ticker", "総合判断", "トレンド判定", "RSI"]
+    first_cols = ["ticker", "company_name", "総合判断", "トレンド判定", "RSI"]
     sigma_cols = [c for c in df_results.columns if "σ判定" in c]
     # 列が存在するか確認してフィルタ
     valid_cols = [c for c in first_cols + sigma_cols if c in df_results.columns]
