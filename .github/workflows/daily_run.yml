@@ -1,0 +1,42 @@
+name: Daily Stock Analysis
+
+on:
+  schedule:
+    # 日本時間 朝5:00 = UTC 20:00
+    - cron: '0 20 * * *'
+  workflow_dispatch: # 手動実行ボタンも有効化
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run analysis script
+        # タイムゾーンをJSTに設定してスクリプト実行
+        run: |
+          TZ='Asia/Tokyo' python main.py
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: 'public'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
