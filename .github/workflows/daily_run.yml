@@ -16,10 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # v3 -> v4 に更新
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5 # v4 -> v5 に更新
         with:
           python-version: '3.9'
 
@@ -32,11 +32,13 @@ jobs:
         run: |
           TZ='Asia/Tokyo' python main.py
 
+      # --- 修正箇所: ここから ---
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3 # v2 -> v3 (これが重要です)
         with:
           path: 'public'
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4 # v2 -> v4 に更新
+      # --- 修正箇所: ここまで ---
