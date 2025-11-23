@@ -228,7 +228,7 @@ if not df_results.empty:
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>日本株シグナル分析</title>
-        <link rel="icon" href="favicon.png" type="image/png">
+        <link rel="icon" href="/daily-stock-analysis/favicon.png" type="image/png">
         <style>
             body {{ font-family: sans-serif; padding: 20px; background-color: #f4f4f9; }}
             h1 {{ color: #333; font-size: 1.5em; }}
