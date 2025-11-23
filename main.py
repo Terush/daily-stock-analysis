@@ -241,14 +241,15 @@ if not df_results.empty:
             .table_style tr:nth-child(even) {{ background-color: #f9f9f9; }}
             .table-container {{ overflow-x: auto; }}
 
-            .description {
+            .description {{
                 background: #eef5ff;
                 border-left: 5px solid #3a78ff;
                 padding: 15px;
                 margin-bottom: 25px;
                 line-height: 1.6;
                 font-size: 0.9em;
-            }
+            }}
+
     
             /* 注意書きのデザイン */
             .disclaimer {{
