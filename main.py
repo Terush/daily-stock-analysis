@@ -60,19 +60,17 @@ def calc_technical_status(df):
 
     trend_str = ""
     if current_price > sma_25:
-        trend_str = "上昇トレンド" # 表示幅節約のため短縮
+        trend_str = "上昇トレンド"
     else:
         trend_str = "下落トレンド"
     return trend_str, rsi
 
 def analyze_stock_combined(ticker):
-    # エラーハンドリングを追加
     try:
         df = yf.download(ticker, period="1y", progress=False, auto_adjust=False)
         if df.empty or "Adj Close" not in df.columns:
             return {"ticker": ticker, "company_name": "取得失敗"}
         
-        # MultiIndexカラム対策 (yfinanceのバージョンによる違いを吸収)
         if isinstance(df.columns, pd.MultiIndex):
              df.columns = df.columns.get_level_values(0)
 
@@ -84,7 +82,6 @@ def analyze_stock_combined(ticker):
         result["トレンド判定"] = trend
         result["RSI"] = f"{rsi_val:.1f}"
 
-        # 総合判断ロジック
         sig_1mo = result["σ判定_1mo"]
         sig_3mo = result["σ判定_3mo"]
         sig_6mo = result["σ判定_6mo"]
@@ -113,14 +110,13 @@ def analyze_stock_combined(ticker):
         else:
             result["総合判断"] = "様子見"
         
-        result["company_name"] = get_company_name(ticker)   # ←追加
+        result["company_name"] = get_company_name(ticker)
         return result
     except Exception as e:
         print(f"Error processing {ticker}: {e}")
         return {"ticker": ticker, "総合判断": "エラー"}
 
 def get_company_name(ticker):
-    # 高速化のため、実際にはリストなどから引くのが理想だが、今回はtry-exceptで実装
     try:
         info = yf.Ticker(ticker).info
         return info.get("shortName") or ticker
@@ -147,11 +143,7 @@ tickers = [
 results = []
 print("分析を開始します...")
 for t in tickers:
-    # 進行状況が見えるように
-    # print(f"Processing {t}...") 
     res = analyze_stock_combined(t)
-    # 会社名は取得時間がかかるため、今回はティッカーそのままか、必要ならAPIを有効化してください
-    # res["company_name"] = get_company_name(t) 
     results.append(res)
 
 df_results = pd.DataFrame(results)
@@ -162,7 +154,6 @@ os.makedirs("public", exist_ok=True)
 if not df_results.empty:
     first_cols = ["ticker", "company_name", "総合判断", "トレンド判定", "RSI"]
     sigma_cols = [c for c in df_results.columns if "σ判定" in c]
-    # 列が存在するか確認してフィルタ
     valid_cols = [c for c in first_cols + sigma_cols if c in df_results.columns]
     df_results = df_results[valid_cols]
 
@@ -176,11 +167,25 @@ if not df_results.empty:
         "警戒：買われすぎ": 1
         }).fillna(0))
     
+    # --- 【変更点1】 Google Financeへのリンク生成関数 ---
+    def make_clickable_ticker(ticker_str):
+        # 9984.T -> 9984 (数字のみ抽出)
+        code = ticker_str.replace(".T", "")
+        # Google FinanceのURL形式を作成
+        url = f"https://www.google.com/finance/quote/{code}:TYO?authuser=0"
+        # HTMLの<a>タグを作成（target="_blank"で別タブで開くように設定）
+        return f'<a href="{url}" target="_blank" class="ticker-link">{ticker_str}</a>'
+
+    # --- 【変更点2】 ticker列にリンク生成関数を適用 ---
+    # .copy() をつけてSettingWithCopyWarningを回避
+    df_picks = df_picks.copy() 
+    df_picks["ticker"] = df_picks["ticker"].apply(make_clickable_ticker)
+
     # 現在時刻 (JST)
     now_str = datetime.now().strftime('%Y-%m-%d %H:%M')
 
-    # HTML生成（スマホでも見やすいCSS付き）
-    html_table = df_picks.to_html(index=False, classes="table_style", border=0)
+    # --- 【変更点3】 escape=False を追加してHTMLタグを有効化 ---
+    html_table = df_picks.to_html(index=False, classes="table_style", border=0, escape=False)
 
     description = """
     <h2>📌 この表について</h2>
@@ -193,7 +198,6 @@ if not df_results.empty:
     </ul>
     """
     
-    # --- 注意書きをHTML用に埋め込み ---
     disclaimer = """
     【ゆるい注意書き】
     
@@ -241,6 +245,17 @@ if not df_results.empty:
             .table_style td {{ padding: 10px; border-bottom: 1px solid #ddd; }}
             .table_style tr:nth-child(even) {{ background-color: #f9f9f9; }}
             .table-container {{ overflow-x: auto; }}
+
+            /* リンクの見栄えを良くするCSS追加 */
+            .ticker-link {{
+                color: #007bff;
+                text-decoration: none;
+                font-weight: bold;
+            }}
+            .ticker-link:hover {{
+                text-decoration: underline;
+                color: #0056b3;
+            }}
 
             .description {{
                 background: #eef5ff;
