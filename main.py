@@ -10,38 +10,65 @@ period_days = {
     "3mo": 60,
     "6mo": 120,
 }
+# 会社名辞書を CSV から読み込む
+company_dict = {}
+csv_path = "japan_stocks.csv"  # CSVファイル名（必要ならパスを変更）
+
+if os.path.exists(csv_path):
+    df_company = pd.read_csv(csv_path)
+    # 必須カラムがあるか一応チェック
+    if {"ticker", "company_name"} <= set(df_company.columns):
+        company_dict = dict(zip(df_company["ticker"], df_company["company_name"]))
+    else:
+        print("WARN: japan_stocks.csv に 'ticker' または 'company_name' がありません")
+else:
+    print("WARN: japan_stocks.csv が見つかりません。ticker をそのまま表示します。")
+
 
 def calc_sigma_signal(df, period_name):
     days = period_days.get(period_name, 20)
+
+    # データが足りない場合は終了
     if len(df) < days + 1:
         return "-"
+
     df_subset = df.tail(days + 1).copy()
-    adj_close = df_subset["Adj Close"]
-    current_price = float(adj_close.iloc[-1].item())
-    calc_series = adj_close.iloc[:-1]
-    if len(calc_series) < 1: return "-"
-    last_close_ref = float(calc_series.iloc[-1].item())
-    
-    # 対数収益率と標準偏差
-    log_returns = np.log(calc_series / calc_series.shift(1)).dropna()
-    if len(log_returns) == 0:
+
+    # Adj Close が無ければ Close を使う
+    if "Adj Close" in df_subset.columns:
+        adj_series = df_subset["Adj Close"]
+    else:
+        adj_series = df_subset["Close"]
+
+    close_series = df_subset["Close"]
+
+    current_price = float(close_series.iloc[-1])
+    last_close_ref = float(close_series.iloc[-2])
+
+    # 直近の計算に当日を含めない
+    calc_series_adj = adj_series.iloc[:-1]
+
+    # 対数収益率 → ボラティリティ
+    log_returns = np.log(calc_series_adj / calc_series_adj.shift(1)).dropna()
+    if len(log_returns) < 5:
         return "-"
-    daily_vol = float(log_returns.std().item())
-    
+
+    daily_vol = float(log_returns.std())
+
     sigma1 = last_close_ref * daily_vol
-    upper_2 = last_close_ref + (2 * sigma1)
-    lower_2 = last_close_ref - (2 * sigma1)
+    upper_2 = last_close_ref + 2 * sigma1
+    lower_2 = last_close_ref - 2 * sigma1
     upper_1 = last_close_ref + sigma1
     lower_1 = last_close_ref - sigma1
 
     if current_price < lower_2:
         return "!! 強い買い (-2σ割れ)"
-    elif lower_2 <= current_price < lower_1:
+    elif current_price < lower_1:
         return "弱い買い (-1σ〜-2σ)"
-    elif upper_1 < current_price <= upper_2:
-        return "弱い売り (+1σ〜+2σ)"
     elif current_price > upper_2:
         return "!! 強い売り (+2σ超え)"
+    elif current_price > upper_1:
+        return "弱い売り (+1σ〜+2σ)"
     else:
         return "中立"
 
@@ -51,13 +78,15 @@ def calc_technical_status(df):
     adj_close = df["Adj Close"]
     current_price = float(adj_close.iloc[-1].item())
     sma_25 = adj_close.rolling(window=25).mean().iloc[-1].item()
-    
+
+    window = 14
     delta = adj_close.diff()
-    gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
-    loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
+    gain = delta.where(delta > 0, 0).ewm(alpha=1/window, min_periods=window).mean()
+    loss = (-delta.where(delta < 0, 0)).ewm(alpha=1/window, min_periods=window).mean()
     rs = gain / loss
     rsi = (100 - (100 / (1 + rs))).iloc[-1].item()
 
+    
     trend_str = ""
     if current_price > sma_25:
         trend_str = "上昇トレンド"
@@ -68,11 +97,42 @@ def calc_technical_status(df):
 def analyze_stock_combined(ticker):
     try:
         df = yf.download(ticker, period="1y", progress=False, auto_adjust=False)
-        if df.empty or "Adj Close" not in df.columns:
+
+        # データの有無チェック
+        if df.empty or ("Close" not in df.columns and "Adj Close" not in df.columns):
             return {"ticker": ticker, "company_name": "取得失敗"}
-        
+
         if isinstance(df.columns, pd.MultiIndex):
-             df.columns = df.columns.get_level_values(0)
+            df.columns = df.columns.get_level_values(0)
+
+        # ---------------------------------------------------
+        # ▼ 【修正】画像生成を削除し、計算のみを行う
+        # ---------------------------------------------------
+        calc_col = "Adj Close" if "Adj Close" in df.columns else "Close"
+        price_col = "Close" if "Close" in df.columns else "Adj Close"
+
+        series_calc = df[calc_col]
+        current_price = float(df[price_col].iloc[-1].item())
+
+        # 対数収益率 (全期間)
+        log_returns = np.log(series_calc / series_calc.shift(1)).dropna()
+
+        # 年率ボラティリティ & 予測レンジ計算
+        if len(log_returns) > 0:
+            daily_vol = log_returns.std()
+            # 年率換算 (営業日252日)
+            annual_vol = daily_vol * np.sqrt(252)
+
+            # 予測レンジ (±2σ, 対数正規分布近似)
+            price_upper_2 = current_price * np.exp(2 * annual_vol)
+            price_lower_2 = current_price * np.exp(-2 * annual_vol)
+
+            hv_str = f"{annual_vol*100:.1f}%"
+            range_str = f"{int(price_lower_2):,} ~ {int(price_upper_2):,}円"
+        else:
+            hv_str = "-"
+            range_str = "-"
+        # ---------------------------------------------------
 
         result = {"ticker": ticker}
         for p_name in period_days.keys():
@@ -82,6 +142,13 @@ def analyze_stock_combined(ticker):
         result["トレンド判定"] = trend
         result["RSI"] = f"{rsi_val:.1f}"
 
+        # 結果辞書に追加
+        result["年率HV"] = hv_str
+        result["予測レンジ(1年後)"] = range_str
+        # ▼【追加】現在価格を見やすくフォーマットして追加
+        result["現在価格"] = f"{current_price:,.0f}円"
+
+        # （以下、判定ロジックは変更なし）
         sig_1mo = result["σ判定_1mo"]
         sig_3mo = result["σ判定_3mo"]
         sig_6mo = result["σ判定_6mo"]
@@ -97,19 +164,61 @@ def analyze_stock_combined(ticker):
         level_1 = sigma_level(sig_1mo)
         level_3 = sigma_level(sig_3mo)
         level_6 = sigma_level(sig_6mo)
-        avg_sigma = float((level_1 + level_3 + level_6) / 3)
+        # --- 重みの設定 (ここをお好みで調整してください) ---
+        w_1 = 3.0  # 1ヶ月の重み (一番重視)
+        w_3 = 2.0  # 3ヶ月の重み
+        w_6 = 1.0  # 6ヶ月の重み
+        total_weight = w_1 + w_3 + w_6
 
-        if avg_sigma >= 1 and "上昇" in trend and rsi_val < 45:
-            if level_1 == 2: result["総合判断"] = "★★ 強い押し目買い"
-            else: result["総合判断"] = "★ 押し目買い好機"
-        elif avg_sigma >= 1 and "下落" in trend:
-            result["総合判断"] = "逆張り買い注意"
-        elif avg_sigma <= -1 and rsi_val > 70:
-            if level_1 == -2: result["総合判断"] = "⚠️ 過熱(強い売り)"
-            else: result["総合判断"] = "警戒：買われすぎ"
-        else:
-            result["総合判断"] = "様子見"
+        # 加重平均の計算
+        avg_sigma = float((level_1 * w_1 + level_3 * w_3 + level_6 * w_6) / total_weight)
+
+        # -----------------------------------------------------------
+        # ▼ 総合判定ロジック（高校生にもわかる言葉版）
+        # -----------------------------------------------------------
+        judge = "🤔 よくわからない（様子見）"
         
+        # 判定用のフラグ（計算はそのまま）
+        is_trend_up = ("上昇" in trend)
+        is_cheap    = (avg_sigma >= 0.8)   # 統計的に「安い」
+        is_expensive= (avg_sigma <= -0.8)  # 統計的に「高い」
+        
+        # 1. 上昇トレンド（基本いい感じ）の場合
+        if is_trend_up:
+            if is_cheap:
+                # 株価は上がってる最中なのに、一時的に安くなってる状態
+                if rsi_val < 35:
+                    judge = "🤩 超チャンス！安くなってるよ"
+                elif rsi_val < 55:
+                    judge = "😊 いい感じ！買ってみる？"
+                else:
+                    # 安い価格帯だけど、勢いが少し余ってる
+                    judge = "👀 安いけど、あと少し待ってみる？"
+            elif is_expensive:
+                # ぐんぐん上がって高くなりすぎた
+                judge = "🔥 高すぎ！今はガマン（買うな）"
+            else:
+                # 順調に推移している
+                judge = "🙂 順調だよ（持ってるならキープ）"
+
+        # 2. 下落トレンド（基本ダメな状態）の場合
+        else:
+            if is_cheap:
+                # 下がってる最中の安値は、さらに下がる可能性がある
+                judge = "😨 安いけど危険！まだ下がるかも"
+            elif is_expensive:
+                judge = "☔️ 弱いね…手を出さないほうがいい"
+            else:
+                judge = "☔️ ダメそう…手を出さないほうがいい"
+
+        # 3. 異常なほど買われすぎている場合
+        if rsi_val > 80:
+            judge = "💣 危険！高騰しすぎ（絶対ストップ）"
+        
+        # 結果を格納
+        result["総合判断"] = judge
+        # -----------------------------------------------------------
+
         result["company_name"] = get_company_name(ticker)
         return result
     except Exception as e:
@@ -117,28 +226,59 @@ def analyze_stock_combined(ticker):
         return {"ticker": ticker, "総合判断": "エラー"}
 
 def get_company_name(ticker):
+    name = company_dict.get(ticker)
+    if name:
+        return name
+
+    # フォールバックで yfinance を使うパターン
     try:
         info = yf.Ticker(ticker).info
         return info.get("shortName") or ticker
     except:
         return ticker
 
-# --- メイン処理 ---
+
 tickers = [
-"4151.T","4502.T","4503.T","4506.T","4507.T","4519.T","4523.T","4568.T","4578.T","4062.T","6479.T","6501.T","6503.T","6504.T","6506.T","6526.T","6645.T","6674.T",
-"6701.T","6702.T","6723.T","6724.T","6752.T","6753.T","6758.T","6762.T","6770.T","6841.T","6857.T","6861.T","6902.T","6920.T","6952.T","6954.T","6963.T","6971.T",
-"6976.T","6981.T","7735.T","7751.T","7752.T","8035.T","7201.T","7202.T","7203.T","7205.T","7211.T","7261.T","7267.T","7269.T","7270.T","7272.T","4543.T","4902.T",
-"6146.T","7731.T","7733.T","7741.T","9432.T","9433.T","9434.T","9984.T","5831.T","7186.T","8304.T","8306.T","8308.T","8309.T","8316.T","8331.T","8354.T","8411.T",
-"8253.T","8591.T","8697.T","8601.T","8604.T","8630.T","8725.T","8750.T","8766.T","8795.T","1332.T","2002.T","2269.T","2282.T","2501.T","2502.T","2503.T","2801.T",
-"2802.T","2871.T","2914.T","3086.T","3092.T","3099.T","3382.T","7453.T","8233.T","8252.T","8267.T","9843.T","9983.T","2413.T","2432.T","3659.T","3697.T","4307.T",
-"4324.T","4385.T","4661.T","4689.T","4704.T","4751.T","4755.T","6098.T","6178.T","6532.T","7974.T","9602.T","9735.T","9766.T","1605.T","3401.T","3402.T","3861.T",
-"3405.T","3407.T","4004.T","4005.T","4021.T","4042.T","4043.T","4061.T","4063.T","4183.T","4188.T","4208.T","4452.T","4901.T","4911.T","6988.T","5019.T","5020.T",
-"5101.T","5108.T","5201.T","5214.T","5233.T","5301.T","5332.T","5333.T","5401.T","5406.T","5411.T","3436.T","5706.T","5711.T","5713.T","5714.T","5801.T","5802.T",
-"5803.T","2768.T","8001.T","8002.T","8015.T","8031.T","8053.T","8058.T","1721.T","1801.T","1802.T","1803.T","1808.T","1812.T","1925.T","1928.T","1963.T","5631.T",
-"6103.T","6113.T","6273.T","6301.T","6302.T","6305.T","6326.T","6361.T","6367.T","6471.T","6472.T","6473.T","7004.T","7011.T","7013.T","7012.T","7832.T","7911.T",
-"7912.T","7951.T","3289.T","8801.T","8802.T","8804.T","8830.T","9001.T","9005.T","9007.T","9008.T","9009.T","9020.T","9021.T","9022.T","9064.T","9147.T","9101.T",
-"9104.T","9107.T","9201.T","9202.T","9501.T","9502.T","9503.T","9531.T","9532.T"
+"4151.T","4502.T","4503.T","4506.T","4507.T","4519.T","4523.T","4568.T","4578.T",
+"4062.T","6479.T","6501.T","6503.T","6504.T","6506.T","6526.T","6645.T","6674.T","6701.T",
+"6702.T","6723.T","6724.T","6752.T","6753.T","6758.T","6762.T","6770.T","6841.T","6857.T",
+"6861.T","6902.T","6920.T","6952.T","6954.T","6963.T","6971.T","6976.T","6981.T","7735.T",
+"7751.T","7752.T","8035.T",
+"7201.T","7202.T","7203.T","7205.T","7211.T","7261.T","7267.T","7269.T","7270.T","7272.T",
+"4543.T","4902.T","6146.T","7731.T","7733.T","7741.T",
+"9432.T","9433.T","9434.T","9984.T",
+"5831.T","7186.T","8304.T","8306.T","8308.T","8309.T","8316.T","8331.T","8354.T","8411.T",
+"8253.T","8591.T","8697.T",
+"8601.T","8604.T",
+"8630.T","8725.T","8750.T","8766.T","8795.T",
+"1332.T",
+"2002.T","2269.T","2282.T","2501.T","2502.T","2503.T","2801.T","2802.T","2871.T","2914.T",
+"3086.T","3092.T","3099.T","3382.T","7453.T","8233.T","8252.T","8267.T","9843.T","9983.T",
+"2413.T","2432.T","3659.T","3697.T","4307.T","4324.T","4385.T","4661.T","4689.T","4704.T",
+"4751.T","4755.T","6098.T","6178.T","6532.T","7974.T","9602.T","9735.T","9766.T",
+"1605.T",
+"3401.T","3402.T",
+"3861.T",
+"3405.T","3407.T","4004.T","4005.T","4021.T","4042.T","4043.T","4061.T","4063.T","4183.T",
+"4188.T","4208.T","4452.T","4901.T","4911.T","6988.T",
+"5019.T","5020.T",
+"5101.T","5108.T",
+"5201.T","5214.T","5233.T","5301.T","5332.T","5333.T",
+"5401.T","5406.T","5411.T",
+"3436.T","5706.T","5711.T","5713.T","5714.T","5801.T","5802.T","5803.T",
+"2768.T","8001.T","8002.T","8015.T","8031.T","8053.T","8058.T",
+"1721.T","1801.T","1802.T","1803.T","1808.T","1812.T","1925.T","1928.T","1963.T",
+"5631.T","6103.T","6113.T","6273.T","6301.T","6302.T",
+"6305.T","6326.T","6361.T","6367.T","6471.T",
+"6472.T","6473.T","7004.T","7011.T","7013.T",
+"7012.T","7832.T","7911.T","7912.T","7951.T",
+"3289.T","8801.T","8802.T","8804.T","8830.T",
+"9001.T","9005.T","9007.T","9008.T","9009.T",
+"9020.T","9021.T","9022.T","9064.T","9147.T",
+"9101.T","9104.T","9107.T","9201.T","9202.T",
+"9501.T","9502.T","9503.T","9531.T","9532.T"
 ]
+
 
 results = []
 print("分析を開始します...")
@@ -152,19 +292,29 @@ df_results = pd.DataFrame(results)
 os.makedirs("public", exist_ok=True)
 
 if not df_results.empty:
-    first_cols = ["ticker", "company_name", "総合判断", "トレンド判定", "RSI"]
-    sigma_cols = [c for c in df_results.columns if "σ判定" in c]
-    valid_cols = [c for c in first_cols + sigma_cols if c in df_results.columns]
-    df_results = df_results[valid_cols]
+    # "トレンド判定", "RSI" をリストに追加して、画面に表示されるようにしました
+    first_cols = ["ticker", "company_name", "総合判断", "現在価格", "予測レンジ(1年後)", "年率HV", "トレンド判定", "RSI"]
+    valid_cols = first_cols  # σ判定の列カット
+    df_results = df_results.reindex(columns=valid_cols, fill_value="-")
+
+    # 存在しない列は無視してdf作成
+    df_results = df_results.reindex(columns=valid_cols, fill_value="-")
 
     # フィルタリングとソート
-    df_picks = df_results[df_results["総合判断"] != "様子見"]
+    df_picks = df_results.copy()
+
+    # フィルタリングとソート（オススメ順に並べる）
     df_picks = df_picks.sort_values(by="総合判断", ascending=False, key=lambda col: col.map({
-        "★★ 強い押し目買い": 5,
-        "★ 押し目買い好機": 4,
-        "逆張り買い注意": 3,
-        "⚠️ 過熱(強い売り)": 2,
-        "警戒：買われすぎ": 1
+        "🤩 超チャンス！安くなってるよ": 10,
+        "😊 いい感じ！買ってみる？": 9,
+        "👀 安いけど、あと少し待ってみる？": 8,
+        "🙂 順調だよ（持ってるならキープ）": 6,
+        "😨 安いけど危険！まだ下がるかも": 4,
+        "🔥 高すぎ！今はガマン（買うな）": 3,
+        "☔️ 弱いね…手を出さないほうがいい": 2,
+        "☔️ ダメそう…手を出さないほうがいい": 1,
+        "💣 危険！高騰しすぎ（絶対ストップ）": 0,
+        "🤔 よくわからない（様子見）": 0
         }).fillna(0))
     
     # --- 【変更点1】 Google Financeへのリンク生成関数 ---
@@ -188,16 +338,18 @@ if not df_results.empty:
     html_table = df_picks.to_html(index=False, classes="table_style", border=0, escape=False)
 
     description = """
-    <h2>📌 この表について</h2>
+    <h2>📌 3秒でわかる用語解説</h2>
     <ul>
-    <li>現在の株価が過去と比べて割高か割安かを表示しています。</li>
-    <li>過去の値動きから標準偏差(σ)を計算し、現在の価格位置を判定しています。</li>
-    <li>移動平均とRSIも加味して、買われすぎ・売られすぎ・中立を整理しています。</li>
-    <li>統計的な位置づけで判断するため、移動平均線やRSI単独よりも位置感が見やすい特徴があります。</li>
-    <li>過去データに基づく計算のため、急変相場では精度が落ちる場合があります。</li>
+    <li><b>現在価格</b> ➔ このレポートを作成した時点（上の最終更新日時）の価格です。<br>
+        <span style="font-size:0.85em; color:#d9534f;">※あなたが今見ている瞬間のリアルタイム株価ではありません。</span></li>
+    <li><b>予測レンジ</b> ➔ 統計上の「これ以上は上がらない/下がらない」の目安ライン。</li>
+    <li><b>年率HV</b> ➔ 銘柄の性格。数値が高いほどハイリスク・ハイリターン。</li>
+    <li><b>トレンド判定</b> ➔ 今の流れが「上り坂（強気）」か「下り坂（弱気）」か。25日平均線が基準です。</li>
+    <li><b>RSI</b> ➔ 30以下なら「バーゲンセール？」、70以上なら「バブル？」のサイン。</li>
     </ul>
+    <p style="font-size:0.85em; color:#666;">※これらは過去の動きに基づいた計算結果であり、未来を保証するものではありません。</p>
     """
-    
+
     disclaimer = """
     【ゆるい注意書き】
     
