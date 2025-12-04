@@ -2,12 +2,12 @@ name: Daily Stock Analysis
 
 on:
   schedule:
-    # 日本時間 朝8:00 = UTC 21:00
-    - cron: '0 23 * * *'
-    # 夜11:30 (JST) = UTC 02:30
-    - cron: '30 2 * * *'
-    # 夜15:30 (JST) = UTC  6:30
-    - cron: '30 6 * * *'
+    # 日本時間 朝7:30 = UTC 22:30
+    - cron: '30 22 * * *'
+    # 夜11:30 (JST) = UTC 02:00
+    - cron: '00 2 * * *'
+    # 夜15:00 (JST) = UTC  6:00
+    - cron: '00 6 * * *'
 
   workflow_dispatch: # 手動実行ボタンも有効化
 
