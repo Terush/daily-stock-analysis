@@ -48,30 +48,42 @@
             padding: 30px;
         }
 
-        .setup-notice {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
+        .portfolio-summary {
+            background: #f8f9fa;
+            border-radius: 8px;
             padding: 20px;
             margin-bottom: 30px;
-            border-radius: 5px;
+            border-left: 4px solid #667eea;
         }
 
-        .setup-notice h2 {
-            color: #856404;
+        .portfolio-summary h2 {
+            color: #333;
             margin-bottom: 15px;
+            font-size: 1.3em;
         }
 
-        .setup-notice p {
-            color: #856404;
-            line-height: 1.8;
-            margin-bottom: 10px;
+        .portfolio-info {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
         }
 
-        .setup-notice code {
-            background: #f8f9fa;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-family: 'Courier New', monospace;
+        .portfolio-item {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .portfolio-item label {
+            display: block;
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .portfolio-item .value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
         }
 
         .stocks-table {
@@ -114,12 +126,33 @@
         .rank-A { background: #cd7f32; color: white; }
         .rank-B { background: #999; color: white; }
 
+        .trend {
+            font-weight: bold;
+        }
+
+        .trend-up { color: #28a745; }
+        .trend-down { color: #dc3545; }
+        .trend-neutral { color: #6c757d; }
+
         .signal {
             display: inline-block;
             padding: 6px 12px;
             border-radius: 20px;
             font-weight: bold;
             font-size: 0.9em;
+        }
+
+        .signal-BUY {
+            background: #dc3545;
+            color: white;
+        }
+
+        .signal-SELL {
+            background: #007bff;
+            color: white;
+        }
+
+        .signal-WAIT {
             background: #e9ecef;
             color: #6c757d;
         }
@@ -134,6 +167,15 @@
         }
 
         @media (max-width: 768px) {
+            .stocks-table {
+                font-size: 0.9em;
+            }
+
+            .stocks-table th,
+            .stocks-table td {
+                padding: 10px 5px;
+            }
+
             .header h1 {
                 font-size: 1.5em;
             }
@@ -149,92 +191,148 @@
         <div class="header">
             <h1>📊 25MA Trend Follow Bot</h1>
             <p>商社株式 売買シグナル監視システム</p>
-            <div class="update-time">セットアップが必要です</div>
+            <div class="update-time">最終更新: 2026-01-01 13:44:29</div>
         </div>
 
         <div class="content">
-            <div class="setup-notice">
-                <h2>🚀 セットアップが必要です</h2>
-                <p>このページは自動的に更新されます。初期セットアップを完了してください。</p>
-
-                <h3 style="margin-top: 20px; color: #856404;">セットアップ手順:</h3>
-                <ol style="color: #856404; line-height: 2; margin-left: 20px;">
-                    <li><code>.env.example</code>を<code>.env</code>にコピー</li>
-                    <li><code>.env</code>ファイルでメール設定を入力</li>
-                    <li><code>python main.py</code>を実行してデータ取得</li>
-                    <li>cron等で毎日自動実行を設定</li>
-                </ol>
-
-                <p style="margin-top: 20px;">
-                    詳細は<strong>README.md</strong>をご確認ください。
-                </p>
+            <div class="portfolio-summary">
+                <h2>💰 ポートフォリオ状況</h2>
+                <div class="portfolio-info">
+                    <div class="portfolio-item">
+                        <label>保有現金</label>
+                        <div class="value">30,000円</div>
+                    </div>
+                    <div class="portfolio-item">
+                        <label>監視銘柄数</label>
+                        <div class="value">4銘柄</div>
+                    </div>
+                </div>
             </div>
 
-            <h2 style="margin-bottom: 15px; color: #333;">📈 監視対象銘柄</h2>
+            <h2 style="margin-bottom: 15px; color: #333;">📈 銘柄別シグナル状況</h2>
 
             <table class="stocks-table">
                 <thead>
                     <tr>
                         <th>銘柄</th>
-                        <th>優先度</th>
-                        <th>ステータス</th>
+                        <th>現在値</th>
+                        <th>25MA</th>
+                        <th>トレンド</th>
+                        <th>今日の判定</th>
                     </tr>
                 </thead>
                 <tbody>
+                    
                     <tr>
                         <td>
-                            <div style="font-weight: bold; margin-bottom: 5px;">丸紅</div>
+                            <div style="font-weight: bold; margin-bottom: 5px;">
+                                丸紅
+                                <span class="rank-badge rank-SS">SS</span>
+                            </div>
                             <div style="font-size: 0.85em; color: #666;">8002.T</div>
                         </td>
-                        <td>
-                            <span class="rank-badge rank-SS">SS</span>
+                        <td style="font-weight: bold; font-size: 1.1em;">
+                            4,353円
                         </td>
                         <td>
-                            <span class="signal">データ取得待ち</span>
+                            4,296円
+                        </td>
+                        <td>
+                            
+                            <span class="trend trend-up">↗ 上昇</span>
+                            
+                        </td>
+                        <td>
+                            
+                            <span class="signal signal-WAIT">WAIT</span>
+                            
                         </td>
                     </tr>
+                    
                     <tr>
                         <td>
-                            <div style="font-weight: bold; margin-bottom: 5px;">三井物産</div>
+                            <div style="font-weight: bold; margin-bottom: 5px;">
+                                三井物産
+                                <span class="rank-badge rank-S">S</span>
+                            </div>
                             <div style="font-size: 0.85em; color: #666;">8031.T</div>
                         </td>
-                        <td>
-                            <span class="rank-badge rank-S">S</span>
+                        <td style="font-weight: bold; font-size: 1.1em;">
+                            4,643円
                         </td>
                         <td>
-                            <span class="signal">データ取得待ち</span>
+                            4,401円
+                        </td>
+                        <td>
+                            
+                            <span class="trend trend-up">↗ 上昇</span>
+                            
+                        </td>
+                        <td>
+                            
+                            <span class="signal signal-WAIT">WAIT</span>
+                            
                         </td>
                     </tr>
+                    
                     <tr>
                         <td>
-                            <div style="font-weight: bold; margin-bottom: 5px;">三菱商事</div>
+                            <div style="font-weight: bold; margin-bottom: 5px;">
+                                三菱商事
+                                <span class="rank-badge rank-A">A</span>
+                            </div>
                             <div style="font-size: 0.85em; color: #666;">8058.T</div>
                         </td>
-                        <td>
-                            <span class="rank-badge rank-A">A</span>
+                        <td style="font-weight: bold; font-size: 1.1em;">
+                            3,586円
                         </td>
                         <td>
-                            <span class="signal">データ取得待ち</span>
+                            3,666円
+                        </td>
+                        <td>
+                            
+                            <span class="trend trend-down">↘ 下落</span>
+                            
+                        </td>
+                        <td>
+                            
+                            <span class="signal signal-WAIT">WAIT</span>
+                            
                         </td>
                     </tr>
+                    
                     <tr>
                         <td>
-                            <div style="font-weight: bold; margin-bottom: 5px;">双日</div>
+                            <div style="font-weight: bold; margin-bottom: 5px;">
+                                双日
+                                <span class="rank-badge rank-B">B</span>
+                            </div>
                             <div style="font-size: 0.85em; color: #666;">2768.T</div>
                         </td>
-                        <td>
-                            <span class="rank-badge rank-B">B</span>
+                        <td style="font-weight: bold; font-size: 1.1em;">
+                            4,867円
                         </td>
                         <td>
-                            <span class="signal">データ取得待ち</span>
+                            4,775円
+                        </td>
+                        <td>
+                            
+                            <span class="trend trend-up">↗ 上昇</span>
+                            
+                        </td>
+                        <td>
+                            
+                            <span class="signal signal-WAIT">WAIT</span>
+                            
                         </td>
                     </tr>
+                    
                 </tbody>
             </table>
 
-            <div style="margin-top: 30px; padding: 20px; background: #e7f3ff; border-left: 4px solid #2196F3; border-radius: 5px;">
-                <h3 style="color: #1976D2; margin-bottom: 10px;">📌 判定ロジック</h3>
-                <ul style="color: #1976D2; line-height: 1.8;">
+            <div style="margin-top: 30px; padding: 20px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 5px;">
+                <h3 style="color: #856404; margin-bottom: 10px;">📌 判定ロジック</h3>
+                <ul style="color: #856404; line-height: 1.8;">
                     <li><strong>買いシグナル:</strong> ゴールデンクロス + 25MA上向き</li>
                     <li><strong>売りシグナル:</strong> デッドクロス または 損切り(-5%)</li>
                     <li><strong>待機:</strong> 上記以外の状態</li>
