@@ -157,6 +157,88 @@
             color: #6c757d;
         }
 
+        .info-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .info-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .info-section h3 {
+            color: #555;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .info-section p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .info-section ul {
+            color: #555;
+            line-height: 1.8;
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .info-section li {
+            margin-bottom: 10px;
+        }
+
+        .highlight-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .feature-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
         .footer {
             background: #f8f9fa;
             padding: 20px;
@@ -337,6 +419,159 @@
                     <li><strong>売りシグナル:</strong> デッドクロス または 損切り(-5%)</li>
                     <li><strong>待機:</strong> 上記以外の状態</li>
                 </ul>
+            </div>
+
+            <!-- システム説明セクション -->
+            <div class="info-section">
+                <h2>🎯 このシステムについて</h2>
+
+                <h3>💡 目的</h3>
+                <p>
+                    このシステムは、日本の主要商社4銘柄の株価を毎日自動的に監視し、
+                    <strong>25日移動平均線（25MA）</strong>に基づいた客観的な売買シグナルを提供することを目的としています。
+                    感情に左右されず、明確なルールに基づいた投資判断をサポートします。
+                </p>
+
+                <h3>📊 なぜ商社株なのか？</h3>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>🏢 安定性</h4>
+                        <p>日本を代表する総合商社は、多様な事業ポートフォリオを持ち、比較的安定した値動きをします。</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>💰 配当利回り</h4>
+                        <p>商社株は高い配当利回りが魅力で、長期保有にも適しています。</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>📈 流動性</h4>
+                        <p>取引量が多く、売買がしやすいため、シグナル発生時にスムーズに取引できます。</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>🌏 景気連動</h4>
+                        <p>世界経済の動向を反映しやすく、トレンドが明確に現れやすい特徴があります。</p>
+                    </div>
+                </div>
+
+                <h3>📐 25日移動平均線（25MA）とは</h3>
+                <p>
+                    25日移動平均線は、過去25営業日の終値の平均値を結んだ線です。
+                    株価のトレンド（上昇・下落）を判断する最も基本的かつ信頼性の高い指標の一つです。
+                </p>
+                <div class="highlight-box">
+                    <strong>25日を選ぶ理由：</strong>
+                    <ul style="margin: 10px 0 0 20px;">
+                        <li>約1ヶ月（営業日ベース）の値動きを平均化</li>
+                        <li>短期的なノイズを除去し、中期トレンドを捉える</li>
+                        <li>多くの投資家が参考にする標準的な期間</li>
+                    </ul>
+                </div>
+
+                <h3>🔔 シグナル判定の詳細</h3>
+
+                <h4 style="color: #dc3545; margin-top: 20px;">🟢 買いシグナル（3つの条件すべてを満たす）</h4>
+                <ol style="margin-left: 20px; line-height: 1.8; color: #555;">
+                    <li><strong>ゴールデンクロス発生：</strong> 株価が25日移動平均線を下から上に突き抜けた</li>
+                    <li><strong>現在値が25MA超：</strong> 現時点で株価が25日移動平均線より上にある</li>
+                    <li><strong>25MAが上向き：</strong> 移動平均線自体が上昇トレンドにある（前日より高い）</li>
+                </ol>
+                <div class="highlight-box">
+                    <p style="margin: 0; color: #1976D2;">
+                        <strong>💡 意味：</strong> トレンドが上向きに転換し、上昇の勢いがある状態です。
+                        「明日の寄り付き（午前9時）に成行で購入」を推奨します。
+                    </p>
+                </div>
+
+                <h4 style="color: #007bff; margin-top: 20px;">🔴 売りシグナル（以下のいずれか1つでも該当）</h4>
+                <ol style="margin-left: 20px; line-height: 1.8; color: #555;">
+                    <li><strong>デッドクロス発生：</strong> 株価が25日移動平均線を上から下に割り込んだ
+                        <ul style="margin-top: 5px;">
+                            <li>上昇トレンドが終了し、下落に転じる可能性が高い</li>
+                        </ul>
+                    </li>
+                    <li><strong>損切りライン到達：</strong> 購入価格から-5%以上下落した
+                        <ul style="margin-top: 5px;">
+                            <li>損失を一定範囲に抑えるための安全装置</li>
+                            <li>「損小利大」の原則に基づく重要なルール</li>
+                        </ul>
+                    </li>
+                </ol>
+                <div class="warning-box">
+                    <p style="margin: 0; color: #856404;">
+                        <strong>⚠️ 重要：</strong> 売りシグナルが出たら、感情に流されず機械的に売却することが、
+                        長期的な資産保全につながります。
+                    </p>
+                </div>
+
+                <h3>🤖 自動化の仕組み</h3>
+                <p>このシステムは以下の流れで毎日自動的に動作します：</p>
+                <ol style="margin-left: 20px; line-height: 1.8; color: #555;">
+                    <li><strong>市場終了後（17:00）：</strong> cron（スケジューラー）により自動起動</li>
+                    <li><strong>データ取得：</strong> Yahoo Financeから4銘柄の最新株価データを取得</li>
+                    <li><strong>分析実行：</strong> 25日移動平均線を計算し、売買シグナルを判定</li>
+                    <li><strong>通知送信：</strong> シグナルが発生した場合のみメールで通知</li>
+                    <li><strong>Web公開：</strong> このページを自動更新し、GitHub Pagesで公開</li>
+                </ol>
+
+                <h3>⚠️ 重要な注意事項</h3>
+                <div class="warning-box">
+                    <ul style="margin: 10px 0 0 20px; color: #856404;">
+                        <li><strong>投資助言ではありません：</strong> このシステムは過去データに基づく機械的な判定であり、
+                            将来の株価を保証するものではありません</li>
+                        <li><strong>最終判断はご自身で：</strong> 投資判断および投資結果の責任は、すべてご自身に帰属します</li>
+                        <li><strong>リスク管理：</strong> 投資は必ず余剰資金で行い、生活資金には手を付けないでください</li>
+                        <li><strong>分散投資：</strong> 1つの銘柄に集中せず、リスク分散を心がけてください</li>
+                        <li><strong>損切りの徹底：</strong> -5%の損切りルールは必ず守ってください</li>
+                    </ul>
+                </div>
+
+                <h3>📚 参考：監視銘柄の優先順位</h3>
+                <table style="width: 100%; margin-top: 15px; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f8f9fa;">
+                            <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">ランク</th>
+                            <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">銘柄</th>
+                            <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">理由</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">
+                                <span class="rank-badge rank-SS">SS</span>
+                            </td>
+                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">丸紅 (8002.T)</td>
+                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6; color: #555;">
+                                最優先監視銘柄。電力・インフラに強み
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">
+                                <span class="rank-badge rank-S">S</span>
+                            </td>
+                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">三井物産 (8031.T)</td>
+                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6; color: #555;">
+                                資源・エネルギーに強み。安定配当
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">
+                                <span class="rank-badge rank-A">A</span>
+                            </td>
+                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">三菱商事 (8058.T)</td>
+                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6; color: #555;">
+                                業界最大手。総合力が高い
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;">
+                                <span class="rank-badge rank-B">B</span>
+                            </td>
+                            <td style="padding: 10px;">双日 (2768.T)</td>
+                            <td style="padding: 10px; color: #555;">
+                                中堅商社。成長性に期待
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
