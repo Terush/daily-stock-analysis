@@ -1,0 +1,26 @@
+{
+  "last_updated": "2026-01-01 00:00:00",
+  "cash": 30000,
+  "holdings": {
+    "8002.T": {
+      "shares": 0,
+      "entry_price": 0,
+      "date_bought": null
+    },
+    "8031.T": {
+      "shares": 0,
+      "entry_price": 0,
+      "date_bought": null
+    },
+    "8058.T": {
+      "shares": 0,
+      "entry_price": 0,
+      "date_bought": null
+    },
+    "2768.T": {
+      "shares": 0,
+      "entry_price": 0,
+      "date_bought": null
+    }
+  }
+}

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>25MA Trend Follow Bot - 商社株売買シグナル</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .update-time {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .portfolio-summary {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+
+        .portfolio-summary h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .portfolio-info {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .portfolio-item {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .portfolio-item label {
+            display: block;
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .portfolio-item .value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .stocks-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .stocks-table thead {
+            background: #f8f9fa;
+        }
+
+        .stocks-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .stocks-table td {
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .stocks-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .rank-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .rank-SS { background: #ffd700; color: #333; }
+        .rank-S { background: #c0c0c0; color: #333; }
+        .rank-A { background: #cd7f32; color: white; }
+        .rank-B { background: #999; color: white; }
+
+        .trend {
+            font-weight: bold;
+        }
+
+        .trend-up { color: #28a745; }
+        .trend-down { color: #dc3545; }
+        .trend-neutral { color: #6c757d; }
+
+        .signal {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .signal-BUY {
+            background: #dc3545;
+            color: white;
+        }
+
+        .signal-SELL {
+            background: #007bff;
+            color: white;
+        }
+
+        .signal-WAIT {
+            background: #e9ecef;
+            color: #6c757d;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            border-top: 1px solid #dee2e6;
+        }
+
+        @media (max-width: 768px) {
+            .stocks-table {
+                font-size: 0.9em;
+            }
+
+            .stocks-table th,
+            .stocks-table td {
+                padding: 10px 5px;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 25MA Trend Follow Bot</h1>
+            <p>商社株式 売買シグナル監視システム</p>
+            <div class="update-time">最終更新: {{ last_updated }}</div>
+        </div>
+
+        <div class="content">
+            <div class="portfolio-summary">
+                <h2>💰 ポートフォリオ状況</h2>
+                <div class="portfolio-info">
+                    <div class="portfolio-item">
+                        <label>保有現金</label>
+                        <div class="value">{{ "{:,}".format(cash) }}円</div>
+                    </div>
+                    <div class="portfolio-item">
+                        <label>監視銘柄数</label>
+                        <div class="value">{{ stocks|length }}銘柄</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 style="margin-bottom: 15px; color: #333;">📈 銘柄別シグナル状況</h2>
+
+            <table class="stocks-table">
+                <thead>
+                    <tr>
+                        <th>銘柄</th>
+                        <th>現在値</th>
+                        <th>25MA</th>
+                        <th>トレンド</th>
+                        <th>今日の判定</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stock in stocks %}
+                    <tr>
+                        <td>
+                            <div style="font-weight: bold; margin-bottom: 5px;">
+                                {{ stock.name }}
+                                <span class="rank-badge rank-{{ stock.rank }}">{{ stock.rank }}</span>
+                            </div>
+                            <div style="font-size: 0.85em; color: #666;">{{ stock.symbol }}</div>
+                        </td>
+                        <td style="font-weight: bold; font-size: 1.1em;">
+                            {{ "{:,.0f}".format(stock.current_price) }}円
+                        </td>
+                        <td>
+                            {{ "{:,.0f}".format(stock.ma) }}円
+                        </td>
+                        <td>
+                            {% if '上昇' in stock.trend %}
+                            <span class="trend trend-up">{{ stock.trend }}</span>
+                            {% elif '下落' in stock.trend %}
+                            <span class="trend trend-down">{{ stock.trend }}</span>
+                            {% else %}
+                            <span class="trend trend-neutral">{{ stock.trend }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if 'BUY' in stock.judgment %}
+                            <span class="signal signal-BUY">{{ stock.judgment }}</span>
+                            {% elif 'SELL' in stock.judgment %}
+                            <span class="signal signal-SELL">{{ stock.judgment }}</span>
+                            {% else %}
+                            <span class="signal signal-WAIT">{{ stock.judgment }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div style="margin-top: 30px; padding: 20px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 5px;">
+                <h3 style="color: #856404; margin-bottom: 10px;">📌 判定ロジック</h3>
+                <ul style="color: #856404; line-height: 1.8;">
+                    <li><strong>買いシグナル:</strong> ゴールデンクロス + 25MA上向き</li>
+                    <li><strong>売りシグナル:</strong> デッドクロス または 損切り(-5%)</li>
+                    <li><strong>待機:</strong> 上記以外の状態</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>25MA Trend Follow Bot - 自動株式売買シグナル検知システム</p>
+            <p style="margin-top: 10px; font-size: 0.85em;">
+                このシステムは投資助言を提供するものではありません。<br>
+                投資判断は自己責任で行ってください。
+            </p>
+        </div>
+    </div>
+</body>
+</html>

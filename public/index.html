@@ -1,0 +1,2418 @@
+
+    <!DOCTYPE html>
+    <html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>日本株シグナル分析</title>
+        <link rel="icon" href="/daily-stock-analysis/favicon.png" type="image/png">
+        <style>
+            body { font-family: sans-serif; padding: 20px; background-color: #f4f4f9; }
+            h1 { color: #333; font-size: 1.5em; }
+            .update-time { color: #666; font-size: 0.8em; margin-bottom: 20px; }
+            .table_style {
+                width: 100%; border-collapse: collapse; margin-top: 20px;
+                background-color: #fff; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+            .table_style th { background-color: #007bff; color: #fff; padding: 10px; text-align: left; }
+            .table_style td { padding: 10px; border-bottom: 1px solid #ddd; }
+            .table_style tr:nth-child(even) { background-color: #f9f9f9; }
+            .table-container { overflow-x: auto; }
+
+            /* リンクの見栄えを良くするCSS追加 */
+            .ticker-link {
+                color: #007bff;
+                text-decoration: none;
+                font-weight: bold;
+            }
+            .ticker-link:hover {
+                text-decoration: underline;
+                color: #0056b3;
+            }
+
+            .description {
+                background: #eef5ff;
+                border-left: 5px solid #3a78ff;
+                padding: 15px;
+                margin-bottom: 25px;
+                line-height: 1.6;
+                font-size: 0.9em;
+            }
+
+    
+            /* 注意書きのデザイン */
+            .disclaimer {
+                margin-top: 40px;
+                padding: 20px;
+                background: #fff6dc;
+                border-left: 6px solid #f0b400;
+                white-space: pre-wrap;
+                font-size: 0.85em;
+                line-height: 1.6em;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>📈 日本株 朝イチ分析レポート</h1>
+        <div class="update-time">最終更新: 2025-11-27 00:31 (JST)</div>
+        <div class="description">
+            
+    <h2>📌 3秒でわかる用語解説</h2>
+    <ul>
+    <li><b>現在価格</b> ➔ このレポートを作成した時点（上の最終更新日時）の価格です。<br>
+        <span style="font-size:0.85em; color:#d9534f;">※あなたが今見ている瞬間のリアルタイム株価ではありません。</span></li>
+    <li><b>予測レンジ</b> ➔ 統計上の「これ以上は上がらない/下がらない」の目安ライン。</li>
+    <li><b>年率HV</b> ➔ 銘柄の性格。数値が高いほどハイリスク・ハイリターン。</li>
+    <li><b>トレンド判定</b> ➔ 今の流れが「上り坂（強気）」か「下り坂（弱気）」か。25日平均線が基準です。</li>
+    <li><b>RSI</b> ➔ 30以下なら「バーゲンセール？」、70以上なら「バブル？」のサイン。</li>
+    </ul>
+    <p style="font-size:0.85em; color:#666;">※これらは過去の動きに基づいた計算結果であり、未来を保証するものではありません。</p>
+    
+        </div>
+        <div class="table-container">
+            <table class="dataframe table_style">
+  <thead>
+    <tr style="text-align: right;">
+      <th>ticker</th>
+      <th>company_name</th>
+      <th>総合判断</th>
+      <th>現在価格</th>
+      <th>予測レンジ(1年後)</th>
+      <th>年率HV</th>
+      <th>トレンド判定</th>
+      <th>RSI</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4151:TYO?authuser=0" target="_blank" class="ticker-link">4151.T</a></td>
+      <td>協和キリン（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,654円</td>
+      <td>1,689 ~ 4,169円</td>
+      <td>22.6%</td>
+      <td>上昇トレンド</td>
+      <td>78.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4503:TYO?authuser=0" target="_blank" class="ticker-link">4503.T</a></td>
+      <td>アステラス製薬（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>1,983円</td>
+      <td>1,200 ~ 3,276円</td>
+      <td>25.1%</td>
+      <td>上昇トレンド</td>
+      <td>82.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4507:TYO?authuser=0" target="_blank" class="ticker-link">4507.T</a></td>
+      <td>塩野義製薬（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,760円</td>
+      <td>1,689 ~ 4,509円</td>
+      <td>24.5%</td>
+      <td>上昇トレンド</td>
+      <td>68.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4506:TYO?authuser=0" target="_blank" class="ticker-link">4506.T</a></td>
+      <td>住友ファーマ（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,623円</td>
+      <td>639 ~ 10,751円</td>
+      <td>70.5%</td>
+      <td>上昇トレンド</td>
+      <td>69.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4568:TYO?authuser=0" target="_blank" class="ticker-link">4568.T</a></td>
+      <td>第一三共（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>3,862円</td>
+      <td>1,735 ~ 8,593円</td>
+      <td>40.0%</td>
+      <td>上昇トレンド</td>
+      <td>61.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4523:TYO?authuser=0" target="_blank" class="ticker-link">4523.T</a></td>
+      <td>エーザイ（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>5,031円</td>
+      <td>2,727 ~ 9,278円</td>
+      <td>30.6%</td>
+      <td>上昇トレンド</td>
+      <td>70.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6920:TYO?authuser=0" target="_blank" class="ticker-link">6920.T</a></td>
+      <td>レーザーテック（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>26,625円</td>
+      <td>8,300 ~ 85,402円</td>
+      <td>58.3%</td>
+      <td>上昇トレンド</td>
+      <td>53.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6971:TYO?authuser=0" target="_blank" class="ticker-link">6971.T</a></td>
+      <td>京セラ（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,112円</td>
+      <td>1,220 ~ 3,654円</td>
+      <td>27.4%</td>
+      <td>上昇トレンド</td>
+      <td>57.6</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6504:TYO?authuser=0" target="_blank" class="ticker-link">6504.T</a></td>
+      <td>富士電機（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>10,945円</td>
+      <td>4,726 ~ 25,342円</td>
+      <td>42.0%</td>
+      <td>上昇トレンド</td>
+      <td>55.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6479:TYO?authuser=0" target="_blank" class="ticker-link">6479.T</a></td>
+      <td>ミネベアミツミ（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,993円</td>
+      <td>1,572 ~ 5,695円</td>
+      <td>32.2%</td>
+      <td>上昇トレンド</td>
+      <td>55.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6701:TYO?authuser=0" target="_blank" class="ticker-link">6701.T</a></td>
+      <td>日本電気（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>6,009円</td>
+      <td>2,618 ~ 13,789円</td>
+      <td>41.5%</td>
+      <td>上昇トレンド</td>
+      <td>64.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6702:TYO?authuser=0" target="_blank" class="ticker-link">6702.T</a></td>
+      <td>富士通（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>4,199円</td>
+      <td>2,197 ~ 8,022円</td>
+      <td>32.4%</td>
+      <td>上昇トレンド</td>
+      <td>61.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6674:TYO?authuser=0" target="_blank" class="ticker-link">6674.T</a></td>
+      <td>（株）ジーエス・ユアサ　コーポレーション</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>4,044円</td>
+      <td>2,044 ~ 7,998円</td>
+      <td>34.1%</td>
+      <td>上昇トレンド</td>
+      <td>58.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6770:TYO?authuser=0" target="_blank" class="ticker-link">6770.T</a></td>
+      <td>アルプスアルパイン（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,042円</td>
+      <td>1,070 ~ 3,894円</td>
+      <td>32.3%</td>
+      <td>上昇トレンド</td>
+      <td>61.6</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/3092:TYO?authuser=0" target="_blank" class="ticker-link">3092.T</a></td>
+      <td>（株）ＺＯＺＯ</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>1,335円</td>
+      <td>779 ~ 2,287円</td>
+      <td>26.9%</td>
+      <td>上昇トレンド</td>
+      <td>56.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/3099:TYO?authuser=0" target="_blank" class="ticker-link">3099.T</a></td>
+      <td>（株）三越伊勢丹ホールディングス</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,458円</td>
+      <td>1,156 ~ 5,219円</td>
+      <td>37.7%</td>
+      <td>上昇トレンド</td>
+      <td>50.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9843:TYO?authuser=0" target="_blank" class="ticker-link">9843.T</a></td>
+      <td>（株）ニトリホールディングス</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,762円</td>
+      <td>1,446 ~ 5,273円</td>
+      <td>32.3%</td>
+      <td>上昇トレンド</td>
+      <td>66.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/2871:TYO?authuser=0" target="_blank" class="ticker-link">2871.T</a></td>
+      <td>（株）ニチレイ</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>1,942円</td>
+      <td>1,227 ~ 3,070円</td>
+      <td>22.9%</td>
+      <td>上昇トレンド</td>
+      <td>68.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/2801:TYO?authuser=0" target="_blank" class="ticker-link">2801.T</a></td>
+      <td>キッコーマン（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>1,424円</td>
+      <td>815 ~ 2,487円</td>
+      <td>27.9%</td>
+      <td>上昇トレンド</td>
+      <td>64.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/2501:TYO?authuser=0" target="_blank" class="ticker-link">2501.T</a></td>
+      <td>サッポロホールディングス（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>8,170円</td>
+      <td>4,655 ~ 14,338円</td>
+      <td>28.1%</td>
+      <td>上昇トレンド</td>
+      <td>68.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/2502:TYO?authuser=0" target="_blank" class="ticker-link">2502.T</a></td>
+      <td>アサヒグループホールディングス（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>1,800円</td>
+      <td>1,187 ~ 2,727円</td>
+      <td>20.8%</td>
+      <td>上昇トレンド</td>
+      <td>61.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8252:TYO?authuser=0" target="_blank" class="ticker-link">8252.T</a></td>
+      <td>（株）丸井グループ</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>3,188円</td>
+      <td>2,123 ~ 4,785円</td>
+      <td>20.3%</td>
+      <td>上昇トレンド</td>
+      <td>67.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8253:TYO?authuser=0" target="_blank" class="ticker-link">8253.T</a></td>
+      <td>（株）クレディセゾン</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>3,839円</td>
+      <td>1,891 ~ 7,793円</td>
+      <td>35.4%</td>
+      <td>上昇トレンド</td>
+      <td>53.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8697:TYO?authuser=0" target="_blank" class="ticker-link">8697.T</a></td>
+      <td>（株）日本取引所グループ</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>1,771円</td>
+      <td>984 ~ 3,184円</td>
+      <td>29.3%</td>
+      <td>上昇トレンド</td>
+      <td>54.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8630:TYO?authuser=0" target="_blank" class="ticker-link">8630.T</a></td>
+      <td>SOMPOホールディングス（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>4,968円</td>
+      <td>2,537 ~ 9,726円</td>
+      <td>33.6%</td>
+      <td>上昇トレンド</td>
+      <td>60.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/2282:TYO?authuser=0" target="_blank" class="ticker-link">2282.T</a></td>
+      <td>日本ハム（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>7,060円</td>
+      <td>4,249 ~ 11,730円</td>
+      <td>25.4%</td>
+      <td>上昇トレンド</td>
+      <td>79.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8309:TYO?authuser=0" target="_blank" class="ticker-link">8309.T</a></td>
+      <td>三井住友トラストグループ（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>4,490円</td>
+      <td>2,610 ~ 7,722円</td>
+      <td>27.1%</td>
+      <td>上昇トレンド</td>
+      <td>65.6</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9434:TYO?authuser=0" target="_blank" class="ticker-link">9434.T</a></td>
+      <td>ソフトバンク（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>224円</td>
+      <td>158 ~ 317円</td>
+      <td>17.3%</td>
+      <td>上昇トレンド</td>
+      <td>53.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8304:TYO?authuser=0" target="_blank" class="ticker-link">8304.T</a></td>
+      <td>（株）あおぞら銀行</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,342円</td>
+      <td>1,367 ~ 4,011円</td>
+      <td>26.9%</td>
+      <td>上昇トレンド</td>
+      <td>55.6</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5831:TYO?authuser=0" target="_blank" class="ticker-link">5831.T</a></td>
+      <td>（株）しずおかフィナンシャルグループ</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,219円</td>
+      <td>1,213 ~ 4,059円</td>
+      <td>30.2%</td>
+      <td>上昇トレンド</td>
+      <td>65.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7733:TYO?authuser=0" target="_blank" class="ticker-link">7733.T</a></td>
+      <td>オリンパス（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,116円</td>
+      <td>1,008 ~ 4,439円</td>
+      <td>37.0%</td>
+      <td>上昇トレンド</td>
+      <td>64.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7269:TYO?authuser=0" target="_blank" class="ticker-link">7269.T</a></td>
+      <td>スズキ（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,452円</td>
+      <td>1,331 ~ 4,514円</td>
+      <td>30.5%</td>
+      <td>上昇トレンド</td>
+      <td>68.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4902:TYO?authuser=0" target="_blank" class="ticker-link">4902.T</a></td>
+      <td>コニカミノルタ（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>635円</td>
+      <td>258 ~ 1,559円</td>
+      <td>44.9%</td>
+      <td>上昇トレンド</td>
+      <td>63.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7270:TYO?authuser=0" target="_blank" class="ticker-link">7270.T</a></td>
+      <td>（株）ＳＵＢＡＲＵ</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>3,494円</td>
+      <td>1,602 ~ 7,618円</td>
+      <td>39.0%</td>
+      <td>上昇トレンド</td>
+      <td>62.8</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7261:TYO?authuser=0" target="_blank" class="ticker-link">7261.T</a></td>
+      <td>マツダ（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>1,142円</td>
+      <td>482 ~ 2,702円</td>
+      <td>43.1%</td>
+      <td>上昇トレンド</td>
+      <td>57.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7202:TYO?authuser=0" target="_blank" class="ticker-link">7202.T</a></td>
+      <td>いすゞ自動車（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,356円</td>
+      <td>1,373 ~ 4,041円</td>
+      <td>27.0%</td>
+      <td>上昇トレンド</td>
+      <td>76.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7752:TYO?authuser=0" target="_blank" class="ticker-link">7752.T</a></td>
+      <td>（株）リコー</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>1,392円</td>
+      <td>747 ~ 2,591円</td>
+      <td>31.1%</td>
+      <td>上昇トレンド</td>
+      <td>58.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7751:TYO?authuser=0" target="_blank" class="ticker-link">7751.T</a></td>
+      <td>キヤノン（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>4,571円</td>
+      <td>2,649 ~ 7,884円</td>
+      <td>27.3%</td>
+      <td>上昇トレンド</td>
+      <td>59.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/2503:TYO?authuser=0" target="_blank" class="ticker-link">2503.T</a></td>
+      <td>キリンホールディングス（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,456円</td>
+      <td>1,689 ~ 3,571円</td>
+      <td>18.7%</td>
+      <td>上昇トレンド</td>
+      <td>74.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/2002:TYO?authuser=0" target="_blank" class="ticker-link">2002.T</a></td>
+      <td>（株）日清製粉グループ本社</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>1,878円</td>
+      <td>1,393 ~ 2,530円</td>
+      <td>14.9%</td>
+      <td>上昇トレンド</td>
+      <td>65.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/1801:TYO?authuser=0" target="_blank" class="ticker-link">1801.T</a></td>
+      <td>大成建設（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>13,445円</td>
+      <td>7,651 ~ 23,626円</td>
+      <td>28.2%</td>
+      <td>上昇トレンド</td>
+      <td>75.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/1721:TYO?authuser=0" target="_blank" class="ticker-link">1721.T</a></td>
+      <td>コムシスホールディングス（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>4,258円</td>
+      <td>2,982 ~ 6,078円</td>
+      <td>17.8%</td>
+      <td>上昇トレンド</td>
+      <td>72.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/1925:TYO?authuser=0" target="_blank" class="ticker-link">1925.T</a></td>
+      <td>大和ハウス工業（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>5,335円</td>
+      <td>3,723 ~ 7,644円</td>
+      <td>18.0%</td>
+      <td>上昇トレンド</td>
+      <td>52.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/1963:TYO?authuser=0" target="_blank" class="ticker-link">1963.T</a></td>
+      <td>日揮ホールディングス（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>1,930円</td>
+      <td>991 ~ 3,754円</td>
+      <td>33.3%</td>
+      <td>上昇トレンド</td>
+      <td>78.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/1812:TYO?authuser=0" target="_blank" class="ticker-link">1812.T</a></td>
+      <td>鹿島建設（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>5,740円</td>
+      <td>3,231 ~ 10,197円</td>
+      <td>28.7%</td>
+      <td>上昇トレンド</td>
+      <td>69.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6273:TYO?authuser=0" target="_blank" class="ticker-link">6273.T</a></td>
+      <td>SMC（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>54,860円</td>
+      <td>26,215 ~ 114,804円</td>
+      <td>36.9%</td>
+      <td>上昇トレンド</td>
+      <td>57.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6472:TYO?authuser=0" target="_blank" class="ticker-link">6472.T</a></td>
+      <td>ＮＴＮ（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>361円</td>
+      <td>195 ~ 665円</td>
+      <td>30.6%</td>
+      <td>上昇トレンド</td>
+      <td>58.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6367:TYO?authuser=0" target="_blank" class="ticker-link">6367.T</a></td>
+      <td>ダイキン工業（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>20,095円</td>
+      <td>11,345 ~ 35,592円</td>
+      <td>28.6%</td>
+      <td>上昇トレンド</td>
+      <td>61.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/2768:TYO?authuser=0" target="_blank" class="ticker-link">2768.T</a></td>
+      <td>双日（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>4,518円</td>
+      <td>2,781 ~ 7,338円</td>
+      <td>24.3%</td>
+      <td>上昇トレンド</td>
+      <td>69.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5802:TYO?authuser=0" target="_blank" class="ticker-link">5802.T</a></td>
+      <td>住友電気工業（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>6,051円</td>
+      <td>2,115 ~ 17,305円</td>
+      <td>52.5%</td>
+      <td>上昇トレンド</td>
+      <td>56.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5714:TYO?authuser=0" target="_blank" class="ticker-link">5714.T</a></td>
+      <td>DOWAホールディングス（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>5,963円</td>
+      <td>3,477 ~ 10,226円</td>
+      <td>27.0%</td>
+      <td>上昇トレンド</td>
+      <td>58.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5706:TYO?authuser=0" target="_blank" class="ticker-link">5706.T</a></td>
+      <td>三井金属（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>17,910円</td>
+      <td>5,961 ~ 53,807円</td>
+      <td>55.0%</td>
+      <td>上昇トレンド</td>
+      <td>54.8</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5711:TYO?authuser=0" target="_blank" class="ticker-link">5711.T</a></td>
+      <td>三菱マテリアル（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>3,160円</td>
+      <td>1,768 ~ 5,647円</td>
+      <td>29.0%</td>
+      <td>上昇トレンド</td>
+      <td>62.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5333:TYO?authuser=0" target="_blank" class="ticker-link">5333.T</a></td>
+      <td>日本碍子（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>3,014円</td>
+      <td>1,782 ~ 5,095円</td>
+      <td>26.3%</td>
+      <td>上昇トレンド</td>
+      <td>66.6</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4208:TYO?authuser=0" target="_blank" class="ticker-link">4208.T</a></td>
+      <td>ＵＢＥ（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,468円</td>
+      <td>1,516 ~ 4,017円</td>
+      <td>24.3%</td>
+      <td>上昇トレンド</td>
+      <td>63.8</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5019:TYO?authuser=0" target="_blank" class="ticker-link">5019.T</a></td>
+      <td>出光興産（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>1,147円</td>
+      <td>681 ~ 1,929円</td>
+      <td>26.0%</td>
+      <td>上昇トレンド</td>
+      <td>69.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5201:TYO?authuser=0" target="_blank" class="ticker-link">5201.T</a></td>
+      <td>ＡＧＣ（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>5,299円</td>
+      <td>3,337 ~ 8,413円</td>
+      <td>23.1%</td>
+      <td>上昇トレンド</td>
+      <td>65.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9766:TYO?authuser=0" target="_blank" class="ticker-link">9766.T</a></td>
+      <td>コナミグループ（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>23,760円</td>
+      <td>10,800 ~ 52,269円</td>
+      <td>39.4%</td>
+      <td>上昇トレンド</td>
+      <td>53.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4005:TYO?authuser=0" target="_blank" class="ticker-link">4005.T</a></td>
+      <td>住友化学（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>478円</td>
+      <td>260 ~ 876円</td>
+      <td>30.4%</td>
+      <td>上昇トレンド</td>
+      <td>60.6</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4061:TYO?authuser=0" target="_blank" class="ticker-link">4061.T</a></td>
+      <td>デンカ（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,542円</td>
+      <td>1,450 ~ 4,457円</td>
+      <td>28.1%</td>
+      <td>上昇トレンド</td>
+      <td>68.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9021:TYO?authuser=0" target="_blank" class="ticker-link">9021.T</a></td>
+      <td>西日本旅客鉄道（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>3,170円</td>
+      <td>2,180 ~ 4,608円</td>
+      <td>18.7%</td>
+      <td>上昇トレンド</td>
+      <td>55.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/3116:TYO?authuser=0" target="_blank" class="ticker-link">3116.T</a></td>
+      <td>TOYOTA BOSHOKU CORP</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,384円</td>
+      <td>1,405 ~ 4,044円</td>
+      <td>26.4%</td>
+      <td>上昇トレンド</td>
+      <td>53.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9202:TYO?authuser=0" target="_blank" class="ticker-link">9202.T</a></td>
+      <td>ANAホールディングス（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,957円</td>
+      <td>2,017 ~ 4,333円</td>
+      <td>19.1%</td>
+      <td>上昇トレンド</td>
+      <td>55.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9201:TYO?authuser=0" target="_blank" class="ticker-link">9201.T</a></td>
+      <td>日本航空（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,955円</td>
+      <td>1,913 ~ 4,563円</td>
+      <td>21.7%</td>
+      <td>上昇トレンド</td>
+      <td>51.6</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6471:TYO?authuser=0" target="_blank" class="ticker-link">6471.T</a></td>
+      <td>日本精工（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>905円</td>
+      <td>543 ~ 1,508円</td>
+      <td>25.5%</td>
+      <td>上昇トレンド</td>
+      <td>66.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9020:TYO?authuser=0" target="_blank" class="ticker-link">9020.T</a></td>
+      <td>東日本旅客鉄道（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>4,041円</td>
+      <td>2,663 ~ 6,130円</td>
+      <td>20.8%</td>
+      <td>上昇トレンド</td>
+      <td>72.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9005:TYO?authuser=0" target="_blank" class="ticker-link">9005.T</a></td>
+      <td>東急（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>1,838円</td>
+      <td>1,299 ~ 2,598円</td>
+      <td>17.3%</td>
+      <td>上昇トレンド</td>
+      <td>65.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9022:TYO?authuser=0" target="_blank" class="ticker-link">9022.T</a></td>
+      <td>東海旅客鉄道（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>4,279円</td>
+      <td>2,582 ~ 7,090円</td>
+      <td>25.3%</td>
+      <td>上昇トレンド</td>
+      <td>60.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8830:TYO?authuser=0" target="_blank" class="ticker-link">8830.T</a></td>
+      <td>住友不動産（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>7,548円</td>
+      <td>4,048 ~ 14,072円</td>
+      <td>31.1%</td>
+      <td>上昇トレンド</td>
+      <td>68.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7912:TYO?authuser=0" target="_blank" class="ticker-link">7912.T</a></td>
+      <td>大日本印刷（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,572円</td>
+      <td>1,575 ~ 4,201円</td>
+      <td>24.5%</td>
+      <td>上昇トレンド</td>
+      <td>52.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8058:TYO?authuser=0" target="_blank" class="ticker-link">8058.T</a></td>
+      <td>三菱商事（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>3,684円</td>
+      <td>2,179 ~ 6,225円</td>
+      <td>26.2%</td>
+      <td>上昇トレンド</td>
+      <td>55.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8053:TYO?authuser=0" target="_blank" class="ticker-link">8053.T</a></td>
+      <td>住友商事（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>4,759円</td>
+      <td>2,745 ~ 8,248円</td>
+      <td>27.5%</td>
+      <td>上昇トレンド</td>
+      <td>57.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6098:TYO?authuser=0" target="_blank" class="ticker-link">6098.T</a></td>
+      <td>（株）リクルートホールディングス</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>8,036円</td>
+      <td>3,174 ~ 20,344円</td>
+      <td>46.4%</td>
+      <td>上昇トレンド</td>
+      <td>53.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4324:TYO?authuser=0" target="_blank" class="ticker-link">4324.T</a></td>
+      <td>（株）電通グループ</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>3,464円</td>
+      <td>1,706 ~ 7,031円</td>
+      <td>35.4%</td>
+      <td>上昇トレンド</td>
+      <td>68.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4307:TYO?authuser=0" target="_blank" class="ticker-link">4307.T</a></td>
+      <td>（株）野村総合研究所</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>6,360円</td>
+      <td>3,473 ~ 11,643円</td>
+      <td>30.2%</td>
+      <td>上昇トレンド</td>
+      <td>61.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/3659:TYO?authuser=0" target="_blank" class="ticker-link">3659.T</a></td>
+      <td>（株）ネクソン</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>3,690円</td>
+      <td>1,721 ~ 7,911円</td>
+      <td>38.1%</td>
+      <td>上昇トレンド</td>
+      <td>62.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/3407:TYO?authuser=0" target="_blank" class="ticker-link">3407.T</a></td>
+      <td>旭化成（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>1,300円</td>
+      <td>800 ~ 2,112円</td>
+      <td>24.3%</td>
+      <td>上昇トレンド</td>
+      <td>64.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/3402:TYO?authuser=0" target="_blank" class="ticker-link">3402.T</a></td>
+      <td>東レ（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>1,014円</td>
+      <td>501 ~ 2,051円</td>
+      <td>35.2%</td>
+      <td>上昇トレンド</td>
+      <td>59.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9602:TYO?authuser=0" target="_blank" class="ticker-link">9602.T</a></td>
+      <td>東宝（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>9,280円</td>
+      <td>4,785 ~ 17,996円</td>
+      <td>33.1%</td>
+      <td>上昇トレンド</td>
+      <td>52.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9735:TYO?authuser=0" target="_blank" class="ticker-link">9735.T</a></td>
+      <td>セコム（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>5,440円</td>
+      <td>3,768 ~ 7,853円</td>
+      <td>18.4%</td>
+      <td>上昇トレンド</td>
+      <td>60.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/2413:TYO?authuser=0" target="_blank" class="ticker-link">2413.T</a></td>
+      <td>エムスリー（株）</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>2,650円</td>
+      <td>962 ~ 7,300円</td>
+      <td>50.7%</td>
+      <td>上昇トレンド</td>
+      <td>63.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9983:TYO?authuser=0" target="_blank" class="ticker-link">9983.T</a></td>
+      <td>（株）ファーストリテイリング</td>
+      <td>✨ 順調だよ（持ってるならキープ）</td>
+      <td>56,990円</td>
+      <td>30,322 ~ 107,109円</td>
+      <td>31.5%</td>
+      <td>上昇トレンド</td>
+      <td>60.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8750:TYO?authuser=0" target="_blank" class="ticker-link">8750.T</a></td>
+      <td>第一生命ホールディングス（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>1,222円</td>
+      <td>578 ~ 2,581円</td>
+      <td>37.4%</td>
+      <td>上昇トレンド</td>
+      <td>61.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8725:TYO?authuser=0" target="_blank" class="ticker-link">8725.T</a></td>
+      <td>MS&ADインシュアランスグループホールディングス（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>3,417円</td>
+      <td>1,830 ~ 6,378円</td>
+      <td>31.2%</td>
+      <td>上昇トレンド</td>
+      <td>58.8</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7453:TYO?authuser=0" target="_blank" class="ticker-link">7453.T</a></td>
+      <td>（株）良品計画</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>3,144円</td>
+      <td>1,381 ~ 7,154円</td>
+      <td>41.1%</td>
+      <td>上昇トレンド</td>
+      <td>52.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8795:TYO?authuser=0" target="_blank" class="ticker-link">8795.T</a></td>
+      <td>（株）Ｔ＆Ｄホールディングス</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>3,353円</td>
+      <td>1,633 ~ 6,883円</td>
+      <td>36.0%</td>
+      <td>上昇トレンド</td>
+      <td>49.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6503:TYO?authuser=0" target="_blank" class="ticker-link">6503.T</a></td>
+      <td>三菱電機（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>4,259円</td>
+      <td>2,084 ~ 8,703円</td>
+      <td>35.7%</td>
+      <td>上昇トレンド</td>
+      <td>55.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6981:TYO?authuser=0" target="_blank" class="ticker-link">6981.T</a></td>
+      <td>（株）村田製作所</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>3,169円</td>
+      <td>1,400 ~ 7,170円</td>
+      <td>40.8%</td>
+      <td>上昇トレンド</td>
+      <td>57.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6841:TYO?authuser=0" target="_blank" class="ticker-link">6841.T</a></td>
+      <td>横河電機（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>4,988円</td>
+      <td>2,607 ~ 9,542円</td>
+      <td>32.4%</td>
+      <td>上昇トレンド</td>
+      <td>69.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6752:TYO?authuser=0" target="_blank" class="ticker-link">6752.T</a></td>
+      <td>パナソニック　ホールディングス（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>1,840円</td>
+      <td>866 ~ 3,909円</td>
+      <td>37.7%</td>
+      <td>上昇トレンド</td>
+      <td>58.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6952:TYO?authuser=0" target="_blank" class="ticker-link">6952.T</a></td>
+      <td>カシオ計算機（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>1,246円</td>
+      <td>768 ~ 2,020円</td>
+      <td>24.2%</td>
+      <td>上昇トレンド</td>
+      <td>55.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4578:TYO?authuser=0" target="_blank" class="ticker-link">4578.T</a></td>
+      <td>大塚ホールディングス（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>9,027円</td>
+      <td>4,730 ~ 17,227円</td>
+      <td>32.3%</td>
+      <td>上昇トレンド</td>
+      <td>68.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8604:TYO?authuser=0" target="_blank" class="ticker-link">8604.T</a></td>
+      <td>野村ホールディングス（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>1,174円</td>
+      <td>598 ~ 2,300円</td>
+      <td>33.7%</td>
+      <td>上昇トレンド</td>
+      <td>63.8</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8411:TYO?authuser=0" target="_blank" class="ticker-link">8411.T</a></td>
+      <td>（株）みずほフィナンシャルグループ</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>5,476円</td>
+      <td>2,602 ~ 11,523円</td>
+      <td>37.2%</td>
+      <td>上昇トレンド</td>
+      <td>67.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8354:TYO?authuser=0" target="_blank" class="ticker-link">8354.T</a></td>
+      <td>（株）ふくおかフィナンシャルグループ</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>4,799円</td>
+      <td>2,480 ~ 9,284円</td>
+      <td>33.0%</td>
+      <td>上昇トレンド</td>
+      <td>65.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8233:TYO?authuser=0" target="_blank" class="ticker-link">8233.T</a></td>
+      <td>（株）高島屋</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>1,688円</td>
+      <td>971 ~ 2,934円</td>
+      <td>27.6%</td>
+      <td>上昇トレンド</td>
+      <td>55.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7186:TYO?authuser=0" target="_blank" class="ticker-link">7186.T</a></td>
+      <td>（株）横浜フィナンシャルグループ</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>1,235円</td>
+      <td>593 ~ 2,570円</td>
+      <td>36.7%</td>
+      <td>上昇トレンド</td>
+      <td>64.6</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9432:TYO?authuser=0" target="_blank" class="ticker-link">9432.T</a></td>
+      <td>ＮＴＴ（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>155円</td>
+      <td>111 ~ 216円</td>
+      <td>16.7%</td>
+      <td>上昇トレンド</td>
+      <td>53.6</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8601:TYO?authuser=0" target="_blank" class="ticker-link">8601.T</a></td>
+      <td>（株）大和証券グループ本社</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>1,306円</td>
+      <td>765 ~ 2,225円</td>
+      <td>26.7%</td>
+      <td>上昇トレンド</td>
+      <td>64.6</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7203:TYO?authuser=0" target="_blank" class="ticker-link">7203.T</a></td>
+      <td>トヨタ自動車（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>3,141円</td>
+      <td>1,581 ~ 6,238円</td>
+      <td>34.3%</td>
+      <td>上昇トレンド</td>
+      <td>55.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7205:TYO?authuser=0" target="_blank" class="ticker-link">7205.T</a></td>
+      <td>日野自動車（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>397円</td>
+      <td>156 ~ 1,008円</td>
+      <td>46.6%</td>
+      <td>上昇トレンド</td>
+      <td>56.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7201:TYO?authuser=0" target="_blank" class="ticker-link">7201.T</a></td>
+      <td>日産自動車（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>382円</td>
+      <td>134 ~ 1,088円</td>
+      <td>52.3%</td>
+      <td>上昇トレンド</td>
+      <td>59.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8031:TYO?authuser=0" target="_blank" class="ticker-link">8031.T</a></td>
+      <td>三井物産（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>4,133円</td>
+      <td>2,424 ~ 7,046円</td>
+      <td>26.7%</td>
+      <td>上昇トレンド</td>
+      <td>65.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8015:TYO?authuser=0" target="_blank" class="ticker-link">8015.T</a></td>
+      <td>豊田通商（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>4,850円</td>
+      <td>2,665 ~ 8,825円</td>
+      <td>29.9%</td>
+      <td>上昇トレンド</td>
+      <td>60.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6302:TYO?authuser=0" target="_blank" class="ticker-link">6302.T</a></td>
+      <td>住友重機械工業（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>4,155円</td>
+      <td>2,190 ~ 7,881円</td>
+      <td>32.0%</td>
+      <td>上昇トレンド</td>
+      <td>60.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6326:TYO?authuser=0" target="_blank" class="ticker-link">6326.T</a></td>
+      <td>（株）クボタ</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>2,218円</td>
+      <td>1,140 ~ 4,314円</td>
+      <td>33.3%</td>
+      <td>上昇トレンド</td>
+      <td>67.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8308:TYO?authuser=0" target="_blank" class="ticker-link">8308.T</a></td>
+      <td>（株）りそなホールディングス</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>1,626円</td>
+      <td>699 ~ 3,782円</td>
+      <td>42.2%</td>
+      <td>上昇トレンド</td>
+      <td>65.8</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8306:TYO?authuser=0" target="_blank" class="ticker-link">8306.T</a></td>
+      <td>（株）三菱ＵＦＪフィナンシャル・グループ</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>2,447円</td>
+      <td>1,234 ~ 4,851円</td>
+      <td>34.2%</td>
+      <td>上昇トレンド</td>
+      <td>61.8</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8331:TYO?authuser=0" target="_blank" class="ticker-link">8331.T</a></td>
+      <td>（株）千葉銀行</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>1,638円</td>
+      <td>808 ~ 3,320円</td>
+      <td>35.3%</td>
+      <td>上昇トレンド</td>
+      <td>68.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9433:TYO?authuser=0" target="_blank" class="ticker-link">9433.T</a></td>
+      <td>KDDI（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>2,704円</td>
+      <td>1,758 ~ 4,158円</td>
+      <td>21.5%</td>
+      <td>上昇トレンド</td>
+      <td>68.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6758:TYO?authuser=0" target="_blank" class="ticker-link">6758.T</a></td>
+      <td>ソニーグループ（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>4,525円</td>
+      <td>2,051 ~ 9,982円</td>
+      <td>39.6%</td>
+      <td>上昇トレンド</td>
+      <td>54.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4502:TYO?authuser=0" target="_blank" class="ticker-link">4502.T</a></td>
+      <td>武田薬品工業（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>4,535円</td>
+      <td>3,021 ~ 6,807円</td>
+      <td>20.3%</td>
+      <td>上昇トレンド</td>
+      <td>67.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8802:TYO?authuser=0" target="_blank" class="ticker-link">8802.T</a></td>
+      <td>三菱地所（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>3,635円</td>
+      <td>2,128 ~ 6,209円</td>
+      <td>26.8%</td>
+      <td>上昇トレンド</td>
+      <td>69.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7951:TYO?authuser=0" target="_blank" class="ticker-link">7951.T</a></td>
+      <td>ヤマハ（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>1,086円</td>
+      <td>581 ~ 2,025円</td>
+      <td>31.2%</td>
+      <td>上昇トレンド</td>
+      <td>64.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9001:TYO?authuser=0" target="_blank" class="ticker-link">9001.T</a></td>
+      <td>東武鉄道（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>2,648円</td>
+      <td>1,856 ~ 3,774円</td>
+      <td>17.7%</td>
+      <td>上昇トレンド</td>
+      <td>67.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9009:TYO?authuser=0" target="_blank" class="ticker-link">9009.T</a></td>
+      <td>京成電鉄（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>1,286円</td>
+      <td>693 ~ 2,384円</td>
+      <td>30.9%</td>
+      <td>上昇トレンド</td>
+      <td>52.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/1928:TYO?authuser=0" target="_blank" class="ticker-link">1928.T</a></td>
+      <td>積水ハウス（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>3,460円</td>
+      <td>2,283 ~ 5,243円</td>
+      <td>20.8%</td>
+      <td>上昇トレンド</td>
+      <td>62.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6473:TYO?authuser=0" target="_blank" class="ticker-link">6473.T</a></td>
+      <td>（株）ジェイテクト</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>1,665円</td>
+      <td>870 ~ 3,183円</td>
+      <td>32.4%</td>
+      <td>上昇トレンド</td>
+      <td>67.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8002:TYO?authuser=0" target="_blank" class="ticker-link">8002.T</a></td>
+      <td>丸紅（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>4,036円</td>
+      <td>2,216 ~ 7,348円</td>
+      <td>30.0%</td>
+      <td>上昇トレンド</td>
+      <td>62.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8001:TYO?authuser=0" target="_blank" class="ticker-link">8001.T</a></td>
+      <td>伊藤忠商事（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>9,288円</td>
+      <td>5,402 ~ 15,969円</td>
+      <td>27.1%</td>
+      <td>上昇トレンド</td>
+      <td>58.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5406:TYO?authuser=0" target="_blank" class="ticker-link">5406.T</a></td>
+      <td>（株）神戸製鋼所</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>1,936円</td>
+      <td>1,216 ~ 3,080円</td>
+      <td>23.2%</td>
+      <td>上昇トレンド</td>
+      <td>68.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5332:TYO?authuser=0" target="_blank" class="ticker-link">5332.T</a></td>
+      <td>TOTO（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>4,084円</td>
+      <td>2,271 ~ 7,342円</td>
+      <td>29.3%</td>
+      <td>上昇トレンド</td>
+      <td>64.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4188:TYO?authuser=0" target="_blank" class="ticker-link">4188.T</a></td>
+      <td>三菱ケミカルグループ（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>871円</td>
+      <td>501 ~ 1,512円</td>
+      <td>27.6%</td>
+      <td>上昇トレンド</td>
+      <td>59.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5108:TYO?authuser=0" target="_blank" class="ticker-link">5108.T</a></td>
+      <td>（株）ブリヂストン</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>7,290円</td>
+      <td>4,651 ~ 11,423円</td>
+      <td>22.5%</td>
+      <td>上昇トレンド</td>
+      <td>63.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5411:TYO?authuser=0" target="_blank" class="ticker-link">5411.T</a></td>
+      <td>JFEホールディングス（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>1,880円</td>
+      <td>1,153 ~ 3,064円</td>
+      <td>24.4%</td>
+      <td>上昇トレンド</td>
+      <td>66.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5214:TYO?authuser=0" target="_blank" class="ticker-link">5214.T</a></td>
+      <td>日本電気硝子（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>5,713円</td>
+      <td>3,497 ~ 9,331円</td>
+      <td>24.5%</td>
+      <td>上昇トレンド</td>
+      <td>68.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4043:TYO?authuser=0" target="_blank" class="ticker-link">4043.T</a></td>
+      <td>（株）トクヤマ</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>3,999円</td>
+      <td>2,265 ~ 7,057円</td>
+      <td>28.4%</td>
+      <td>上昇トレンド</td>
+      <td>66.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4042:TYO?authuser=0" target="_blank" class="ticker-link">4042.T</a></td>
+      <td>東ソー（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>2,302円</td>
+      <td>1,469 ~ 3,607円</td>
+      <td>22.4%</td>
+      <td>上昇トレンド</td>
+      <td>58.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5101:TYO?authuser=0" target="_blank" class="ticker-link">5101.T</a></td>
+      <td>横浜ゴム（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>6,169円</td>
+      <td>2,979 ~ 12,772円</td>
+      <td>36.4%</td>
+      <td>上昇トレンド</td>
+      <td>68.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5020:TYO?authuser=0" target="_blank" class="ticker-link">5020.T</a></td>
+      <td>ＥＮＥＯＳホールディングス（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>1,037円</td>
+      <td>559 ~ 1,921円</td>
+      <td>30.8%</td>
+      <td>上昇トレンド</td>
+      <td>61.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4183:TYO?authuser=0" target="_blank" class="ticker-link">4183.T</a></td>
+      <td>三井化学（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>3,808円</td>
+      <td>2,180 ~ 6,651円</td>
+      <td>27.9%</td>
+      <td>上昇トレンド</td>
+      <td>64.8</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/3861:TYO?authuser=0" target="_blank" class="ticker-link">3861.T</a></td>
+      <td>王子ホールディングス（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>822円</td>
+      <td>530 ~ 1,274円</td>
+      <td>21.9%</td>
+      <td>上昇トレンド</td>
+      <td>63.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6178:TYO?authuser=0" target="_blank" class="ticker-link">6178.T</a></td>
+      <td>日本郵政（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>1,511円</td>
+      <td>869 ~ 2,625円</td>
+      <td>27.6%</td>
+      <td>上昇トレンド</td>
+      <td>63.6</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4385:TYO?authuser=0" target="_blank" class="ticker-link">4385.T</a></td>
+      <td>（株）メルカリ</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>2,648円</td>
+      <td>1,011 ~ 6,930円</td>
+      <td>48.1%</td>
+      <td>上昇トレンド</td>
+      <td>64.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7267:TYO?authuser=0" target="_blank" class="ticker-link">7267.T</a></td>
+      <td>本田技研工業（株）</td>
+      <td>✋ 高すぎ！今はガマン（買うな）</td>
+      <td>1,570円</td>
+      <td>786 ~ 3,132円</td>
+      <td>34.5%</td>
+      <td>上昇トレンド</td>
+      <td>53.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6963:TYO?authuser=0" target="_blank" class="ticker-link">6963.T</a></td>
+      <td>ローム（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>2,080円</td>
+      <td>878 ~ 4,926円</td>
+      <td>43.1%</td>
+      <td>下落トレンド</td>
+      <td>44.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6645:TYO?authuser=0" target="_blank" class="ticker-link">6645.T</a></td>
+      <td>オムロン（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>3,889円</td>
+      <td>1,824 ~ 8,290円</td>
+      <td>37.8%</td>
+      <td>下落トレンド</td>
+      <td>43.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6861:TYO?authuser=0" target="_blank" class="ticker-link">6861.T</a></td>
+      <td>（株）キーエンス</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>53,550円</td>
+      <td>28,939 ~ 99,088円</td>
+      <td>30.8%</td>
+      <td>下落トレンド</td>
+      <td>37.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6594:TYO?authuser=0" target="_blank" class="ticker-link">6594.T</a></td>
+      <td>NIDEC CORPORATION</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>1,958円</td>
+      <td>667 ~ 5,744円</td>
+      <td>53.8%</td>
+      <td>下落トレンド</td>
+      <td>36.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9104:TYO?authuser=0" target="_blank" class="ticker-link">9104.T</a></td>
+      <td>（株）商船三井</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>4,391円</td>
+      <td>2,522 ~ 7,644円</td>
+      <td>27.7%</td>
+      <td>下落トレンド</td>
+      <td>45.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5803:TYO?authuser=0" target="_blank" class="ticker-link">5803.T</a></td>
+      <td>（株）フジクラ</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>18,035円</td>
+      <td>4,644 ~ 70,030円</td>
+      <td>67.8%</td>
+      <td>下落トレンド</td>
+      <td>48.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5801:TYO?authuser=0" target="_blank" class="ticker-link">5801.T</a></td>
+      <td>古河電気工業（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>9,215円</td>
+      <td>2,379 ~ 35,684円</td>
+      <td>67.7%</td>
+      <td>下落トレンド</td>
+      <td>45.8</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5301:TYO?authuser=0" target="_blank" class="ticker-link">5301.T</a></td>
+      <td>東海カーボン（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>1,010円</td>
+      <td>565 ~ 1,804円</td>
+      <td>29.0%</td>
+      <td>下落トレンド</td>
+      <td>46.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4452:TYO?authuser=0" target="_blank" class="ticker-link">4452.T</a></td>
+      <td>花王（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>6,423円</td>
+      <td>4,260 ~ 9,682円</td>
+      <td>20.5%</td>
+      <td>下落トレンド</td>
+      <td>45.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9101:TYO?authuser=0" target="_blank" class="ticker-link">9101.T</a></td>
+      <td>日本郵船（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>4,901円</td>
+      <td>2,869 ~ 8,369円</td>
+      <td>26.8%</td>
+      <td>下落トレンド</td>
+      <td>41.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5631:TYO?authuser=0" target="_blank" class="ticker-link">5631.T</a></td>
+      <td>（株）日本製鋼所</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>8,883円</td>
+      <td>2,820 ~ 27,980円</td>
+      <td>57.4%</td>
+      <td>下落トレンド</td>
+      <td>43.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7011:TYO?authuser=0" target="_blank" class="ticker-link">7011.T</a></td>
+      <td>三菱重工業（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>3,931円</td>
+      <td>1,455 ~ 10,616円</td>
+      <td>49.7%</td>
+      <td>下落トレンド</td>
+      <td>41.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8766:TYO?authuser=0" target="_blank" class="ticker-link">8766.T</a></td>
+      <td>東京海上ホールディングス（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>5,554円</td>
+      <td>2,675 ~ 11,531円</td>
+      <td>36.5%</td>
+      <td>下落トレンド</td>
+      <td>40.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7211:TYO?authuser=0" target="_blank" class="ticker-link">7211.T</a></td>
+      <td>三菱自動車工業（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>372円</td>
+      <td>148 ~ 935円</td>
+      <td>46.1%</td>
+      <td>下落トレンド</td>
+      <td>47.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6146:TYO?authuser=0" target="_blank" class="ticker-link">6146.T</a></td>
+      <td>（株）ディスコ</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>43,990円</td>
+      <td>12,666 ~ 152,773円</td>
+      <td>62.2%</td>
+      <td>下落トレンド</td>
+      <td>41.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4543:TYO?authuser=0" target="_blank" class="ticker-link">4543.T</a></td>
+      <td>テルモ（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>2,467円</td>
+      <td>1,411 ~ 4,310円</td>
+      <td>27.9%</td>
+      <td>下落トレンド</td>
+      <td>50.6</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7735:TYO?authuser=0" target="_blank" class="ticker-link">7735.T</a></td>
+      <td>（株）ＳＣＲＥＥＮホールディングス</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>12,545円</td>
+      <td>4,539 ~ 34,664円</td>
+      <td>50.8%</td>
+      <td>下落トレンド</td>
+      <td>46.8</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8035:TYO?authuser=0" target="_blank" class="ticker-link">8035.T</a></td>
+      <td>東京エレクトロン（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>31,170円</td>
+      <td>11,554 ~ 84,083円</td>
+      <td>49.6%</td>
+      <td>下落トレンド</td>
+      <td>49.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6857:TYO?authuser=0" target="_blank" class="ticker-link">6857.T</a></td>
+      <td>（株）アドバンテスト</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>19,460円</td>
+      <td>5,089 ~ 74,404円</td>
+      <td>67.1%</td>
+      <td>下落トレンド</td>
+      <td>51.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6506:TYO?authuser=0" target="_blank" class="ticker-link">6506.T</a></td>
+      <td>（株）安川電機</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>3,872円</td>
+      <td>1,283 ~ 11,678円</td>
+      <td>55.2%</td>
+      <td>下落トレンド</td>
+      <td>45.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6501:TYO?authuser=0" target="_blank" class="ticker-link">6501.T</a></td>
+      <td>（株）日立製作所</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>4,853円</td>
+      <td>1,893 ~ 12,438円</td>
+      <td>47.1%</td>
+      <td>下落トレンド</td>
+      <td>51.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4062:TYO?authuser=0" target="_blank" class="ticker-link">4062.T</a></td>
+      <td>イビデン（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>10,905円</td>
+      <td>3,005 ~ 39,571円</td>
+      <td>64.4%</td>
+      <td>下落トレンド</td>
+      <td>43.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6724:TYO?authuser=0" target="_blank" class="ticker-link">6724.T</a></td>
+      <td>セイコーエプソン（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>1,931円</td>
+      <td>980 ~ 3,803円</td>
+      <td>33.9%</td>
+      <td>下落トレンド</td>
+      <td>51.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6976:TYO?authuser=0" target="_blank" class="ticker-link">6976.T</a></td>
+      <td>太陽誘電（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>3,228円</td>
+      <td>1,066 ~ 9,774円</td>
+      <td>55.4%</td>
+      <td>下落トレンド</td>
+      <td>40.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6902:TYO?authuser=0" target="_blank" class="ticker-link">6902.T</a></td>
+      <td>（株）デンソー</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>2,060円</td>
+      <td>1,138 ~ 3,724円</td>
+      <td>29.6%</td>
+      <td>下落トレンド</td>
+      <td>42.8</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6753:TYO?authuser=0" target="_blank" class="ticker-link">6753.T</a></td>
+      <td>シャープ（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>791円</td>
+      <td>354 ~ 1,764円</td>
+      <td>40.1%</td>
+      <td>下落トレンド</td>
+      <td>42.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6762:TYO?authuser=0" target="_blank" class="ticker-link">6762.T</a></td>
+      <td>ＴＤＫ（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>2,468円</td>
+      <td>1,036 ~ 5,879円</td>
+      <td>43.4%</td>
+      <td>下落トレンド</td>
+      <td>51.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7731:TYO?authuser=0" target="_blank" class="ticker-link">7731.T</a></td>
+      <td>（株）ニコン</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>1,800円</td>
+      <td>817 ~ 3,965円</td>
+      <td>39.5%</td>
+      <td>下落トレンド</td>
+      <td>52.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7272:TYO?authuser=0" target="_blank" class="ticker-link">7272.T</a></td>
+      <td>ヤマハ発動機（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>1,116円</td>
+      <td>594 ~ 2,094円</td>
+      <td>31.5%</td>
+      <td>下落トレンド</td>
+      <td>50.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/2802:TYO?authuser=0" target="_blank" class="ticker-link">2802.T</a></td>
+      <td>味の素（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>3,593円</td>
+      <td>1,889 ~ 6,833円</td>
+      <td>32.1%</td>
+      <td>下落トレンド</td>
+      <td>36.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/3086:TYO?authuser=0" target="_blank" class="ticker-link">3086.T</a></td>
+      <td>J.フロント　リテイリング（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>2,240円</td>
+      <td>1,194 ~ 4,199円</td>
+      <td>31.4%</td>
+      <td>下落トレンド</td>
+      <td>44.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6305:TYO?authuser=0" target="_blank" class="ticker-link">6305.T</a></td>
+      <td>日立建機（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>4,566円</td>
+      <td>2,321 ~ 8,979円</td>
+      <td>33.8%</td>
+      <td>下落トレンド</td>
+      <td>47.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7004:TYO?authuser=0" target="_blank" class="ticker-link">7004.T</a></td>
+      <td>カナデビア（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>970円</td>
+      <td>455 ~ 2,066円</td>
+      <td>37.8%</td>
+      <td>下落トレンド</td>
+      <td>43.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6113:TYO?authuser=0" target="_blank" class="ticker-link">6113.T</a></td>
+      <td>（株）アマダ</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>1,816円</td>
+      <td>1,042 ~ 3,164円</td>
+      <td>27.8%</td>
+      <td>下落トレンド</td>
+      <td>50.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9107:TYO?authuser=0" target="_blank" class="ticker-link">9107.T</a></td>
+      <td>川崎汽船（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>2,077円</td>
+      <td>1,141 ~ 3,777円</td>
+      <td>29.9%</td>
+      <td>下落トレンド</td>
+      <td>44.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9064:TYO?authuser=0" target="_blank" class="ticker-link">9064.T</a></td>
+      <td>ヤマトホールディングス（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>2,254円</td>
+      <td>1,352 ~ 3,757円</td>
+      <td>25.5%</td>
+      <td>下落トレンド</td>
+      <td>50.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9147:TYO?authuser=0" target="_blank" class="ticker-link">9147.T</a></td>
+      <td>NIPPON EXPRESSホールディングス（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>3,288円</td>
+      <td>1,990 ~ 5,430円</td>
+      <td>25.1%</td>
+      <td>下落トレンド</td>
+      <td>49.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7832:TYO?authuser=0" target="_blank" class="ticker-link">7832.T</a></td>
+      <td>（株）バンダイナムコホールディングス</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>4,585円</td>
+      <td>2,247 ~ 9,352円</td>
+      <td>35.6%</td>
+      <td>下落トレンド</td>
+      <td>46.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/3697:TYO?authuser=0" target="_blank" class="ticker-link">3697.T</a></td>
+      <td>（株）ＳＨＩＦＴ</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>1,008円</td>
+      <td>384 ~ 2,639円</td>
+      <td>48.1%</td>
+      <td>下落トレンド</td>
+      <td>39.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7974:TYO?authuser=0" target="_blank" class="ticker-link">7974.T</a></td>
+      <td>任天堂（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>13,235円</td>
+      <td>6,123 ~ 28,604円</td>
+      <td>38.5%</td>
+      <td>下落トレンド</td>
+      <td>49.6</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/3401:TYO?authuser=0" target="_blank" class="ticker-link">3401.T</a></td>
+      <td>帝人（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>1,296円</td>
+      <td>762 ~ 2,202円</td>
+      <td>26.5%</td>
+      <td>下落トレンド</td>
+      <td>52.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4901:TYO?authuser=0" target="_blank" class="ticker-link">4901.T</a></td>
+      <td>富士フイルムホールディングス（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>3,330円</td>
+      <td>1,880 ~ 5,895円</td>
+      <td>28.6%</td>
+      <td>下落トレンド</td>
+      <td>42.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4911:TYO?authuser=0" target="_blank" class="ticker-link">4911.T</a></td>
+      <td>（株）資生堂</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>2,238円</td>
+      <td>945 ~ 5,296円</td>
+      <td>43.1%</td>
+      <td>下落トレンド</td>
+      <td>35.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/3405:TYO?authuser=0" target="_blank" class="ticker-link">3405.T</a></td>
+      <td>（株）クラレ</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>1,536円</td>
+      <td>784 ~ 3,006円</td>
+      <td>33.6%</td>
+      <td>下落トレンド</td>
+      <td>32.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5401:TYO?authuser=0" target="_blank" class="ticker-link">5401.T</a></td>
+      <td>日本製鉄（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>616円</td>
+      <td>372 ~ 1,018円</td>
+      <td>25.2%</td>
+      <td>下落トレンド</td>
+      <td>50.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5713:TYO?authuser=0" target="_blank" class="ticker-link">5713.T</a></td>
+      <td>住友金属鉱山（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>4,885円</td>
+      <td>2,104 ~ 11,337円</td>
+      <td>42.1%</td>
+      <td>下落トレンド</td>
+      <td>48.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/3436:TYO?authuser=0" target="_blank" class="ticker-link">3436.T</a></td>
+      <td>（株）ＳＵＭＣＯ</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>1,234円</td>
+      <td>369 ~ 4,121円</td>
+      <td>60.3%</td>
+      <td>下落トレンド</td>
+      <td>39.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4021:TYO?authuser=0" target="_blank" class="ticker-link">4021.T</a></td>
+      <td>日産化学（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>5,169円</td>
+      <td>3,245 ~ 8,232円</td>
+      <td>23.3%</td>
+      <td>下落トレンド</td>
+      <td>49.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6532:TYO?authuser=0" target="_blank" class="ticker-link">6532.T</a></td>
+      <td>（株）ベイカレント</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>6,711円</td>
+      <td>2,947 ~ 15,280円</td>
+      <td>41.1%</td>
+      <td>下落トレンド</td>
+      <td>39.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4704:TYO?authuser=0" target="_blank" class="ticker-link">4704.T</a></td>
+      <td>トレンドマイクロ（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>7,772円</td>
+      <td>3,944 ~ 15,314円</td>
+      <td>33.9%</td>
+      <td>下落トレンド</td>
+      <td>46.8</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4751:TYO?authuser=0" target="_blank" class="ticker-link">4751.T</a></td>
+      <td>（株）サイバーエージェント</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>1,416円</td>
+      <td>687 ~ 2,918円</td>
+      <td>36.2%</td>
+      <td>下落トレンド</td>
+      <td>36.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4689:TYO?authuser=0" target="_blank" class="ticker-link">4689.T</a></td>
+      <td>LINEヤフー（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>426円</td>
+      <td>235 ~ 772円</td>
+      <td>29.7%</td>
+      <td>下落トレンド</td>
+      <td>41.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4661:TYO?authuser=0" target="_blank" class="ticker-link">4661.T</a></td>
+      <td>（株）オリエンタルランド</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>3,020円</td>
+      <td>1,653 ~ 5,516円</td>
+      <td>30.1%</td>
+      <td>下落トレンド</td>
+      <td>37.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/2432:TYO?authuser=0" target="_blank" class="ticker-link">2432.T</a></td>
+      <td>（株）ディー・エヌ・エー</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>2,414円</td>
+      <td>841 ~ 6,925円</td>
+      <td>52.7%</td>
+      <td>下落トレンド</td>
+      <td>42.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7012:TYO?authuser=0" target="_blank" class="ticker-link">7012.T</a></td>
+      <td>川崎重工業（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>9,991円</td>
+      <td>3,376 ~ 29,559円</td>
+      <td>54.2%</td>
+      <td>下落トレンド</td>
+      <td>41.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7013:TYO?authuser=0" target="_blank" class="ticker-link">7013.T</a></td>
+      <td>（株）ＩＨＩ</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>2,740円</td>
+      <td>946 ~ 7,933円</td>
+      <td>53.2%</td>
+      <td>下落トレンド</td>
+      <td>44.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6988:TYO?authuser=0" target="_blank" class="ticker-link">6988.T</a></td>
+      <td>日東電工（株）</td>
+      <td>🙅‍♂️ ダメそう（手を出さないで）</td>
+      <td>3,797円</td>
+      <td>1,879 ~ 7,670円</td>
+      <td>35.2%</td>
+      <td>下落トレンド</td>
+      <td>50.7</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8316:TYO?authuser=0" target="_blank" class="ticker-link">8316.T</a></td>
+      <td>（株）三井住友フィナンシャルグループ</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>4,624円</td>
+      <td>2,409 ~ 8,871円</td>
+      <td>32.6%</td>
+      <td>上昇トレンド</td>
+      <td>71.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/2269:TYO?authuser=0" target="_blank" class="ticker-link">2269.T</a></td>
+      <td>明治ホールディングス（株）</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>3,300円</td>
+      <td>2,294 ~ 4,745円</td>
+      <td>18.2%</td>
+      <td>上昇トレンド</td>
+      <td>76.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4519:TYO?authuser=0" target="_blank" class="ticker-link">4519.T</a></td>
+      <td>中外製薬（株）</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>8,564円</td>
+      <td>3,529 ~ 20,781円</td>
+      <td>44.3%</td>
+      <td>上昇トレンド</td>
+      <td>70.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8591:TYO?authuser=0" target="_blank" class="ticker-link">8591.T</a></td>
+      <td>オリックス（株）</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>4,163円</td>
+      <td>2,542 ~ 6,815円</td>
+      <td>24.6%</td>
+      <td>上昇トレンド</td>
+      <td>70.8</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/2914:TYO?authuser=0" target="_blank" class="ticker-link">2914.T</a></td>
+      <td>日本たばこ産業（株）</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>5,847円</td>
+      <td>3,924 ~ 8,712円</td>
+      <td>19.9%</td>
+      <td>上昇トレンド</td>
+      <td>76.8</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/3382:TYO?authuser=0" target="_blank" class="ticker-link">3382.T</a></td>
+      <td>（株）セブン＆アイ・ホールディングス</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>2,161円</td>
+      <td>1,163 ~ 4,013円</td>
+      <td>31.0%</td>
+      <td>上昇トレンド</td>
+      <td>72.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7564:TYO?authuser=0" target="_blank" class="ticker-link">7564.T</a></td>
+      <td>WORKMAN CO LTD</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>7,130円</td>
+      <td>3,801 ~ 13,372円</td>
+      <td>31.4%</td>
+      <td>上昇トレンド</td>
+      <td>78.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9503:TYO?authuser=0" target="_blank" class="ticker-link">9503.T</a></td>
+      <td>関西電力（株）</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>2,657円</td>
+      <td>1,528 ~ 4,618円</td>
+      <td>27.6%</td>
+      <td>上昇トレンド</td>
+      <td>73.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8801:TYO?authuser=0" target="_blank" class="ticker-link">8801.T</a></td>
+      <td>三井不動産（株）</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>1,837円</td>
+      <td>1,083 ~ 3,113円</td>
+      <td>26.4%</td>
+      <td>上昇トレンド</td>
+      <td>71.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8804:TYO?authuser=0" target="_blank" class="ticker-link">8804.T</a></td>
+      <td>東京建物（株）</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>3,428円</td>
+      <td>1,961 ~ 5,992円</td>
+      <td>27.9%</td>
+      <td>上昇トレンド</td>
+      <td>76.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/3289:TYO?authuser=0" target="_blank" class="ticker-link">3289.T</a></td>
+      <td>東急不動産ホールディングス（株）</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>1,446円</td>
+      <td>915 ~ 2,283円</td>
+      <td>22.9%</td>
+      <td>上昇トレンド</td>
+      <td>79.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/1332:TYO?authuser=0" target="_blank" class="ticker-link">1332.T</a></td>
+      <td>（株）ニッスイ</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>1,256円</td>
+      <td>807 ~ 1,956円</td>
+      <td>22.1%</td>
+      <td>上昇トレンド</td>
+      <td>77.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/8267:TYO?authuser=0" target="_blank" class="ticker-link">8267.T</a></td>
+      <td>イオン（株）</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>2,858円</td>
+      <td>1,640 ~ 4,980円</td>
+      <td>27.8%</td>
+      <td>上昇トレンド</td>
+      <td>79.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/1605:TYO?authuser=0" target="_blank" class="ticker-link">1605.T</a></td>
+      <td>（株）ＩＮＰＥＸ</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>3,290円</td>
+      <td>1,867 ~ 5,796円</td>
+      <td>28.3%</td>
+      <td>上昇トレンド</td>
+      <td>75.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9532:TYO?authuser=0" target="_blank" class="ticker-link">9532.T</a></td>
+      <td>大阪瓦斯（株）</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>5,430円</td>
+      <td>3,463 ~ 8,513円</td>
+      <td>22.5%</td>
+      <td>上昇トレンド</td>
+      <td>82.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9502:TYO?authuser=0" target="_blank" class="ticker-link">9502.T</a></td>
+      <td>中部電力（株）</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>2,448円</td>
+      <td>1,555 ~ 3,850円</td>
+      <td>22.7%</td>
+      <td>上昇トレンド</td>
+      <td>71.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9531:TYO?authuser=0" target="_blank" class="ticker-link">9531.T</a></td>
+      <td>東京瓦斯（株）</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>6,459円</td>
+      <td>3,797 ~ 10,986円</td>
+      <td>26.6%</td>
+      <td>上昇トレンド</td>
+      <td>76.0</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9007:TYO?authuser=0" target="_blank" class="ticker-link">9007.T</a></td>
+      <td>小田急電鉄（株）</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>1,789円</td>
+      <td>1,198 ~ 2,671円</td>
+      <td>20.0%</td>
+      <td>上昇トレンド</td>
+      <td>75.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/1803:TYO?authuser=0" target="_blank" class="ticker-link">1803.T</a></td>
+      <td>清水建設（株）</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>2,652円</td>
+      <td>1,504 ~ 4,673円</td>
+      <td>28.3%</td>
+      <td>上昇トレンド</td>
+      <td>79.6</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/1802:TYO?authuser=0" target="_blank" class="ticker-link">1802.T</a></td>
+      <td>（株）大林組</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>3,180円</td>
+      <td>1,923 ~ 5,256円</td>
+      <td>25.1%</td>
+      <td>上昇トレンド</td>
+      <td>80.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/1808:TYO?authuser=0" target="_blank" class="ticker-link">1808.T</a></td>
+      <td>（株）長谷工コーポレーション</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>2,972円</td>
+      <td>1,997 ~ 4,421円</td>
+      <td>19.9%</td>
+      <td>上昇トレンド</td>
+      <td>77.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7911:TYO?authuser=0" target="_blank" class="ticker-link">7911.T</a></td>
+      <td>Toppanホールディングス（株）</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>4,579円</td>
+      <td>2,162 ~ 9,697円</td>
+      <td>37.5%</td>
+      <td>上昇トレンド</td>
+      <td>71.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9008:TYO?authuser=0" target="_blank" class="ticker-link">9008.T</a></td>
+      <td>京王電鉄（株）</td>
+      <td>💰 勝ち逃げしよう（利益確定）</td>
+      <td>4,078円</td>
+      <td>2,547 ~ 6,528円</td>
+      <td>23.5%</td>
+      <td>上昇トレンド</td>
+      <td>75.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9984:TYO?authuser=0" target="_blank" class="ticker-link">9984.T</a></td>
+      <td>ソフトバンクグループ（株）</td>
+      <td>💨 今すぐ逃げて！（損切りチャンス）</td>
+      <td>16,260円</td>
+      <td>4,932 ~ 53,597円</td>
+      <td>59.6%</td>
+      <td>下落トレンド</td>
+      <td>34.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6723:TYO?authuser=0" target="_blank" class="ticker-link">6723.T</a></td>
+      <td>ルネサスエレクトロニクス（株）</td>
+      <td>💨 今すぐ逃げて！（損切りチャンス）</td>
+      <td>1,834円</td>
+      <td>611 ~ 5,503円</td>
+      <td>54.9%</td>
+      <td>下落トレンド</td>
+      <td>47.9</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6954:TYO?authuser=0" target="_blank" class="ticker-link">6954.T</a></td>
+      <td>ファナック（株）</td>
+      <td>💨 今すぐ逃げて！（損切りチャンス）</td>
+      <td>4,935円</td>
+      <td>2,260 ~ 10,773円</td>
+      <td>39.0%</td>
+      <td>下落トレンド</td>
+      <td>52.5</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6526:TYO?authuser=0" target="_blank" class="ticker-link">6526.T</a></td>
+      <td>（株）ソシオネクスト</td>
+      <td>💨 今すぐ逃げて！（損切りチャンス）</td>
+      <td>2,208円</td>
+      <td>579 ~ 8,419円</td>
+      <td>66.9%</td>
+      <td>下落トレンド</td>
+      <td>40.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7741:TYO?authuser=0" target="_blank" class="ticker-link">7741.T</a></td>
+      <td>ＨＯＹＡ（株）</td>
+      <td>💨 今すぐ逃げて！（損切りチャンス）</td>
+      <td>23,650円</td>
+      <td>12,591 ~ 44,421円</td>
+      <td>31.5%</td>
+      <td>下落トレンド</td>
+      <td>52.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4755:TYO?authuser=0" target="_blank" class="ticker-link">4755.T</a></td>
+      <td>楽天グループ（株）</td>
+      <td>💨 今すぐ逃げて！（損切りチャンス）</td>
+      <td>952円</td>
+      <td>441 ~ 2,050円</td>
+      <td>38.4%</td>
+      <td>下落トレンド</td>
+      <td>46.4</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4004:TYO?authuser=0" target="_blank" class="ticker-link">4004.T</a></td>
+      <td>（株）レゾナック・ホールディングス</td>
+      <td>💨 今すぐ逃げて！（損切りチャンス）</td>
+      <td>5,808円</td>
+      <td>2,398 ~ 14,063円</td>
+      <td>44.2%</td>
+      <td>下落トレンド</td>
+      <td>51.3</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/4063:TYO?authuser=0" target="_blank" class="ticker-link">4063.T</a></td>
+      <td>信越化学工業（株）</td>
+      <td>💨 今すぐ逃げて！（損切りチャンス）</td>
+      <td>4,617円</td>
+      <td>2,413 ~ 8,832円</td>
+      <td>32.4%</td>
+      <td>下落トレンド</td>
+      <td>49.8</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/5233:TYO?authuser=0" target="_blank" class="ticker-link">5233.T</a></td>
+      <td>太平洋セメント（株）</td>
+      <td>💨 今すぐ逃げて！（損切りチャンス）</td>
+      <td>3,761円</td>
+      <td>2,031 ~ 6,961円</td>
+      <td>30.8%</td>
+      <td>下落トレンド</td>
+      <td>44.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6103:TYO?authuser=0" target="_blank" class="ticker-link">6103.T</a></td>
+      <td>オークマ（株）</td>
+      <td>💨 今すぐ逃げて！（損切りチャンス）</td>
+      <td>3,475円</td>
+      <td>1,697 ~ 7,113円</td>
+      <td>35.8%</td>
+      <td>下落トレンド</td>
+      <td>50.6</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6361:TYO?authuser=0" target="_blank" class="ticker-link">6361.T</a></td>
+      <td>（株）荏原製作所</td>
+      <td>💨 今すぐ逃げて！（損切りチャンス）</td>
+      <td>3,985円</td>
+      <td>1,612 ~ 9,847円</td>
+      <td>45.2%</td>
+      <td>下落トレンド</td>
+      <td>50.6</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6301:TYO?authuser=0" target="_blank" class="ticker-link">6301.T</a></td>
+      <td>（株）小松製作所</td>
+      <td>💨 今すぐ逃げて！（損切りチャンス）</td>
+      <td>5,163円</td>
+      <td>2,724 ~ 9,785円</td>
+      <td>32.0%</td>
+      <td>下落トレンド</td>
+      <td>48.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/9501:TYO?authuser=0" target="_blank" class="ticker-link">9501.T</a></td>
+      <td>東京電力ホールディングス（株）</td>
+      <td>💨 今すぐ逃げて！（損切りチャンス）</td>
+      <td>801円</td>
+      <td>307 ~ 2,083円</td>
+      <td>47.8%</td>
+      <td>下落トレンド</td>
+      <td>48.1</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/6240:TYO?authuser=0" target="_blank" class="ticker-link">6240.T</a></td>
+      <td>YAMASHIN-FILTER CORP</td>
+      <td>💨 今すぐ逃げて！（損切りチャンス）</td>
+      <td>641円</td>
+      <td>265 ~ 1,546円</td>
+      <td>44.0%</td>
+      <td>下落トレンド</td>
+      <td>43.2</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.google.com/finance/quote/7532:TYO?authuser=0" target="_blank" class="ticker-link">7532.T</a></td>
+      <td>PAN PACIFIC INTL HLDGS CORP</td>
+      <td>💨 今すぐ逃げて！（損切りチャンス）</td>
+      <td>946円</td>
+      <td>573 ~ 1,561円</td>
+      <td>25.1%</td>
+      <td>下落トレンド</td>
+      <td>49.1</td>
+    </tr>
+  </tbody>
+</table>
+        </div>
+        <div class="disclaimer">
+    【ゆるい注意書き】
+    
+    この分析結果は、作者が「たぶん合ってる…はず…？」と願いながら育てたものです。
+    大根のようにまっすぐでもなく、ほうれん草のように栄養満点でもなく、
+    たぶん“かぶ”くらいの信頼度です。つまり、食べられるけど万能ではありません。
+    
+    計算式はマジメですが、作者の数学力・プログラミング力・投資センスは
+    かぶの葉っぱくらいの頼りなさです。
+    見た目は立派でも、油断するとベランダで萎れます。
+    
+    このツールは過去データを勝手に計算しているだけで、
+    未来を当てるものではありません。
+    株価は食べるかぶよりずっと気まぐれで、
+    時々こちらを笑いながら地中深く潜ります。
+    
+    この情報を信じて大損しても、
+    作者は画面の前で「えっ…ごめん…」と申し訳なさメンタルに漬かるだけで、
+    損失を補填する能力はありません。
+    
+    投資判断は必ずあなた自身の頭（たぶんかぶより賢い）でお願いします。
+    そして、このツールの無断転載・販売・「この人が推奨してました！」とSNSで晒す行為は
+    ぬか漬けに生クリームを入れるくらいやめたほうがいい行為です。
+    
+    ほどよく使い、ほどよく疑い、ほどよく笑ってください。
+    </div>
+    </body>
+    </html>
+    
