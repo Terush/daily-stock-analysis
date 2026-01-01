@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>25MA Trend Follow Bot - 商社株売買シグナル</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .update-time {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .setup-notice {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+
+        .setup-notice h2 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .setup-notice p {
+            color: #856404;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .setup-notice code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .stocks-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .stocks-table thead {
+            background: #f8f9fa;
+        }
+
+        .stocks-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .stocks-table td {
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .stocks-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .rank-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .rank-SS { background: #ffd700; color: #333; }
+        .rank-S { background: #c0c0c0; color: #333; }
+        .rank-A { background: #cd7f32; color: white; }
+        .rank-B { background: #999; color: white; }
+
+        .signal {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+            background: #e9ecef;
+            color: #6c757d;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            border-top: 1px solid #dee2e6;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 25MA Trend Follow Bot</h1>
+            <p>商社株式 売買シグナル監視システム</p>
+            <div class="update-time">セットアップが必要です</div>
+        </div>
+
+        <div class="content">
+            <div class="setup-notice">
+                <h2>🚀 セットアップが必要です</h2>
+                <p>このページは自動的に更新されます。初期セットアップを完了してください。</p>
+
+                <h3 style="margin-top: 20px; color: #856404;">セットアップ手順:</h3>
+                <ol style="color: #856404; line-height: 2; margin-left: 20px;">
+                    <li><code>.env.example</code>を<code>.env</code>にコピー</li>
+                    <li><code>.env</code>ファイルでメール設定を入力</li>
+                    <li><code>python main.py</code>を実行してデータ取得</li>
+                    <li>cron等で毎日自動実行を設定</li>
+                </ol>
+
+                <p style="margin-top: 20px;">
+                    詳細は<strong>README.md</strong>をご確認ください。
+                </p>
+            </div>
+
+            <h2 style="margin-bottom: 15px; color: #333;">📈 監視対象銘柄</h2>
+
+            <table class="stocks-table">
+                <thead>
+                    <tr>
+                        <th>銘柄</th>
+                        <th>優先度</th>
+                        <th>ステータス</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div style="font-weight: bold; margin-bottom: 5px;">丸紅</div>
+                            <div style="font-size: 0.85em; color: #666;">8002.T</div>
+                        </td>
+                        <td>
+                            <span class="rank-badge rank-SS">SS</span>
+                        </td>
+                        <td>
+                            <span class="signal">データ取得待ち</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div style="font-weight: bold; margin-bottom: 5px;">三井物産</div>
+                            <div style="font-size: 0.85em; color: #666;">8031.T</div>
+                        </td>
+                        <td>
+                            <span class="rank-badge rank-S">S</span>
+                        </td>
+                        <td>
+                            <span class="signal">データ取得待ち</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div style="font-weight: bold; margin-bottom: 5px;">三菱商事</div>
+                            <div style="font-size: 0.85em; color: #666;">8058.T</div>
+                        </td>
+                        <td>
+                            <span class="rank-badge rank-A">A</span>
+                        </td>
+                        <td>
+                            <span class="signal">データ取得待ち</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div style="font-weight: bold; margin-bottom: 5px;">双日</div>
+                            <div style="font-size: 0.85em; color: #666;">2768.T</div>
+                        </td>
+                        <td>
+                            <span class="rank-badge rank-B">B</span>
+                        </td>
+                        <td>
+                            <span class="signal">データ取得待ち</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="margin-top: 30px; padding: 20px; background: #e7f3ff; border-left: 4px solid #2196F3; border-radius: 5px;">
+                <h3 style="color: #1976D2; margin-bottom: 10px;">📌 判定ロジック</h3>
+                <ul style="color: #1976D2; line-height: 1.8;">
+                    <li><strong>買いシグナル:</strong> ゴールデンクロス + 25MA上向き</li>
+                    <li><strong>売りシグナル:</strong> デッドクロス または 損切り(-5%)</li>
+                    <li><strong>待機:</strong> 上記以外の状態</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>25MA Trend Follow Bot - 自動株式売買シグナル検知システム</p>
+            <p style="margin-top: 10px; font-size: 0.85em;">
+                このシステムは投資助言を提供するものではありません。<br>
+                投資判断は自己責任で行ってください。
+            </p>
+        </div>
+    </div>
+</body>
+</html>
