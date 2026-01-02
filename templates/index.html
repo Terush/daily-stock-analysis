@@ -13,25 +13,28 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #000000;
             padding: 20px;
             min-height: 100vh;
+            color: #ffffff;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
+            background: #1a1a1a;
             border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 40px rgba(255,255,255,0.1);
             overflow: hidden;
+            border: 1px solid #333;
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #000000;
             color: white;
             padding: 30px;
             text-align: center;
+            border-bottom: 2px solid #333;
         }
 
         .header h1 {
@@ -46,18 +49,20 @@
 
         .content {
             padding: 30px;
+            background: #1a1a1a;
         }
 
         .portfolio-summary {
-            background: #f8f9fa;
+            background: #0a0a0a;
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 30px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #4a90e2;
+            border: 1px solid #333;
         }
 
         .portfolio-summary h2 {
-            color: #333;
+            color: #ffffff;
             margin-bottom: 15px;
             font-size: 1.3em;
         }
@@ -75,7 +80,7 @@
 
         .portfolio-item label {
             display: block;
-            color: #666;
+            color: #aaa;
             font-size: 0.9em;
             margin-bottom: 5px;
         }
@@ -83,7 +88,7 @@
         .portfolio-item .value {
             font-size: 1.5em;
             font-weight: bold;
-            color: #333;
+            color: #ffffff;
         }
 
         .stocks-table {
@@ -93,24 +98,25 @@
         }
 
         .stocks-table thead {
-            background: #f8f9fa;
+            background: #0a0a0a;
         }
 
         .stocks-table th {
             padding: 15px;
             text-align: left;
             font-weight: 600;
-            color: #333;
-            border-bottom: 2px solid #dee2e6;
+            color: #ffffff;
+            border-bottom: 2px solid #333;
         }
 
         .stocks-table td {
             padding: 15px;
-            border-bottom: 1px solid #dee2e6;
+            border-bottom: 1px solid #333;
+            color: #ffffff;
         }
 
         .stocks-table tr:hover {
-            background: #f8f9fa;
+            background: #2a2a2a;
         }
 
         .rank-badge {
@@ -132,7 +138,7 @@
 
         .trend-up { color: #28a745; }
         .trend-down { color: #dc3545; }
-        .trend-neutral { color: #6c757d; }
+        .trend-neutral { color: #aaa; }
 
         .signal {
             display: inline-block;
@@ -153,17 +159,17 @@
         }
 
         .signal-WAIT {
-            background: #e9ecef;
-            color: #6c757d;
+            background: #2a2a2a;
+            color: #aaa;
         }
 
         .footer {
-            background: #f8f9fa;
+            background: #0a0a0a;
             padding: 20px;
             text-align: center;
-            color: #666;
+            color: #aaa;
             font-size: 0.9em;
-            border-top: 1px solid #dee2e6;
+            border-top: 1px solid #333;
         }
 
         @media (max-width: 768px) {
@@ -189,14 +195,14 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📊 25MA Trend Follow Bot</h1>
+            <h1>25MA Trend Follow Bot</h1>
             <p>商社株式 売買シグナル監視システム</p>
             <div class="update-time">最終更新: {{ last_updated }}</div>
         </div>
 
         <div class="content">
             <div class="portfolio-summary">
-                <h2>💰 ポートフォリオ状況</h2>
+                <h2>ポートフォリオ状況</h2>
                 <div class="portfolio-info">
                     <div class="portfolio-item">
                         <label>保有現金</label>
@@ -209,7 +215,7 @@
                 </div>
             </div>
 
-            <h2 style="margin-bottom: 15px; color: #333;">📈 銘柄別シグナル状況</h2>
+            <h2 style="margin-bottom: 15px; color: #ffffff;">銘柄別シグナル状況</h2>
 
             <table class="stocks-table">
                 <thead>
@@ -229,7 +235,7 @@
                                 {{ stock.name }}
                                 <span class="rank-badge rank-{{ stock.rank }}">{{ stock.rank }}</span>
                             </div>
-                            <div style="font-size: 0.85em; color: #666;">{{ stock.symbol }}</div>
+                            <div style="font-size: 0.85em; color: #aaa;">{{ stock.symbol }}</div>
                         </td>
                         <td style="font-weight: bold; font-size: 1.1em;">
                             {{ "{:,.0f}".format(stock.current_price) }}円
@@ -260,9 +266,9 @@
                 </tbody>
             </table>
 
-            <div style="margin-top: 30px; padding: 20px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 5px;">
-                <h3 style="color: #856404; margin-bottom: 10px;">📌 判定ロジック</h3>
-                <ul style="color: #856404; line-height: 1.8;">
+            <div style="margin-top: 30px; padding: 20px; background: #2a2410; border-left: 4px solid #ffc107; border-radius: 5px; border: 1px solid #3a3420;">
+                <h3 style="color: #ffc107; margin-bottom: 10px;">判定ロジック</h3>
+                <ul style="color: #cccccc; line-height: 1.8;">
                     <li><strong>買いシグナル:</strong> ゴールデンクロス + 25MA上向き</li>
                     <li><strong>売りシグナル:</strong> デッドクロス または 損切り(-5%)</li>
                     <li><strong>待機:</strong> 上記以外の状態</li>
