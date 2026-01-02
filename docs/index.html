@@ -13,25 +13,28 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #000000;
             padding: 20px;
             min-height: 100vh;
+            color: #ffffff;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            background: white;
+            background: #1a1a1a;
             border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 40px rgba(255,255,255,0.1);
             overflow: hidden;
+            border: 1px solid #333;
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #000000;
             color: white;
             padding: 30px;
             text-align: center;
+            border-bottom: 2px solid #333;
         }
 
         .header h1 {
@@ -46,18 +49,20 @@
 
         .content {
             padding: 30px;
+            background: #1a1a1a;
         }
 
         .portfolio-summary {
-            background: #f8f9fa;
+            background: #0a0a0a;
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 30px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #4a90e2;
+            border: 1px solid #333;
         }
 
         .portfolio-summary h2 {
-            color: #333;
+            color: #ffffff;
             margin-bottom: 15px;
             font-size: 1.3em;
         }
@@ -75,7 +80,7 @@
 
         .portfolio-item label {
             display: block;
-            color: #666;
+            color: #aaa;
             font-size: 0.9em;
             margin-bottom: 5px;
         }
@@ -83,7 +88,7 @@
         .portfolio-item .value {
             font-size: 1.5em;
             font-weight: bold;
-            color: #333;
+            color: #ffffff;
         }
 
         .stocks-table {
@@ -93,24 +98,25 @@
         }
 
         .stocks-table thead {
-            background: #f8f9fa;
+            background: #0a0a0a;
         }
 
         .stocks-table th {
             padding: 15px;
             text-align: left;
             font-weight: 600;
-            color: #333;
-            border-bottom: 2px solid #dee2e6;
+            color: #ffffff;
+            border-bottom: 2px solid #333;
         }
 
         .stocks-table td {
             padding: 15px;
-            border-bottom: 1px solid #dee2e6;
+            border-bottom: 1px solid #333;
+            color: #ffffff;
         }
 
         .stocks-table tr:hover {
-            background: #f8f9fa;
+            background: #2a2a2a;
         }
 
         .rank-badge {
@@ -153,41 +159,42 @@
         }
 
         .signal-WAIT {
-            background: #e9ecef;
-            color: #6c757d;
+            background: #2a2a2a;
+            color: #aaa;
         }
 
         .info-section {
-            background: #f8f9fa;
+            background: #0a0a0a;
             border-radius: 8px;
             padding: 25px;
             margin-top: 30px;
             margin-bottom: 30px;
+            border: 1px solid #333;
         }
 
         .info-section h2 {
-            color: #333;
+            color: #ffffff;
             margin-bottom: 20px;
             font-size: 1.4em;
-            border-bottom: 3px solid #667eea;
+            border-bottom: 3px solid #4a90e2;
             padding-bottom: 10px;
         }
 
         .info-section h3 {
-            color: #555;
+            color: #cccccc;
             margin-top: 25px;
             margin-bottom: 15px;
             font-size: 1.1em;
         }
 
         .info-section p {
-            color: #555;
+            color: #cccccc;
             line-height: 1.8;
             margin-bottom: 15px;
         }
 
         .info-section ul {
-            color: #555;
+            color: #cccccc;
             line-height: 1.8;
             margin-left: 20px;
             margin-bottom: 15px;
@@ -198,19 +205,21 @@
         }
 
         .highlight-box {
-            background: #e7f3ff;
-            border-left: 4px solid #2196F3;
+            background: #1a2a3a;
+            border-left: 4px solid #4a90e2;
             padding: 15px;
             margin: 15px 0;
             border-radius: 5px;
+            border: 1px solid #2a3a4a;
         }
 
         .warning-box {
-            background: #fff3cd;
+            background: #2a2410;
             border-left: 4px solid #ffc107;
             padding: 15px;
             margin: 15px 0;
             border-radius: 5px;
+            border: 1px solid #3a3420;
         }
 
         .feature-grid {
@@ -221,31 +230,32 @@
         }
 
         .feature-card {
-            background: white;
+            background: #1a1a1a;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(255,255,255,0.05);
+            border: 1px solid #333;
         }
 
         .feature-card h4 {
-            color: #667eea;
+            color: #4a90e2;
             margin-bottom: 10px;
             font-size: 1.1em;
         }
 
         .feature-card p {
-            color: #666;
+            color: #aaa;
             font-size: 0.95em;
             line-height: 1.6;
         }
 
         .footer {
-            background: #f8f9fa;
+            background: #0a0a0a;
             padding: 20px;
             text-align: center;
-            color: #666;
+            color: #aaa;
             font-size: 0.9em;
-            border-top: 1px solid #dee2e6;
+            border-top: 1px solid #333;
         }
 
         @media (max-width: 768px) {
@@ -271,14 +281,14 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📊 25MA Trend Follow Bot</h1>
+            <h1>25MA Trend Follow Bot</h1>
             <p>商社株式 売買シグナル監視システム</p>
             <div class="update-time">最終更新: 2026-01-01 13:44:29</div>
         </div>
 
         <div class="content">
             <div class="portfolio-summary">
-                <h2>💰 ポートフォリオ状況</h2>
+                <h2>ポートフォリオ状況</h2>
                 <div class="portfolio-info">
                     <div class="portfolio-item">
                         <label>保有現金</label>
@@ -291,7 +301,7 @@
                 </div>
             </div>
 
-            <h2 style="margin-bottom: 15px; color: #333;">📈 銘柄別シグナル状況</h2>
+            <h2 style="margin-bottom: 15px; color: #ffffff;">銘柄別シグナル状況</h2>
 
             <table class="stocks-table">
                 <thead>
@@ -412,9 +422,9 @@
                 </tbody>
             </table>
 
-            <div style="margin-top: 30px; padding: 20px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 5px;">
-                <h3 style="color: #856404; margin-bottom: 10px;">📌 判定ロジック</h3>
-                <ul style="color: #856404; line-height: 1.8;">
+            <div style="margin-top: 30px; padding: 20px; background: #2a2410; border-left: 4px solid #ffc107; border-radius: 5px; border: 1px solid #3a3420;">
+                <h3 style="color: #ffc107; margin-bottom: 10px;">判定ロジック</h3>
+                <ul style="color: #cccccc; line-height: 1.8;">
                     <li><strong>買いシグナル:</strong> ゴールデンクロス + 25MA上向き</li>
                     <li><strong>売りシグナル:</strong> デッドクロス または 損切り(-5%)</li>
                     <li><strong>待機:</strong> 上記以外の状態</li>
@@ -423,36 +433,36 @@
 
             <!-- システム説明セクション -->
             <div class="info-section">
-                <h2>🎯 このシステムについて</h2>
+                <h2>このシステムについて</h2>
 
-                <h3>💡 目的</h3>
+                <h3>目的</h3>
                 <p>
                     このシステムは、日本の主要商社4銘柄の株価を毎日自動的に監視し、
                     <strong>25日移動平均線（25MA）</strong>に基づいた客観的な売買シグナルを提供することを目的としています。
                     感情に左右されず、明確なルールに基づいた投資判断をサポートします。
                 </p>
 
-                <h3>📊 なぜ商社株なのか？</h3>
+                <h3>なぜ商社株なのか？</h3>
                 <div class="feature-grid">
                     <div class="feature-card">
-                        <h4>🏢 安定性</h4>
+                        <h4>安定性</h4>
                         <p>日本を代表する総合商社は、多様な事業ポートフォリオを持ち、比較的安定した値動きをします。</p>
                     </div>
                     <div class="feature-card">
-                        <h4>💰 配当利回り</h4>
+                        <h4>配当利回り</h4>
                         <p>商社株は高い配当利回りが魅力で、長期保有にも適しています。</p>
                     </div>
                     <div class="feature-card">
-                        <h4>📈 流動性</h4>
+                        <h4>流動性</h4>
                         <p>取引量が多く、売買がしやすいため、シグナル発生時にスムーズに取引できます。</p>
                     </div>
                     <div class="feature-card">
-                        <h4>🌏 景気連動</h4>
+                        <h4>景気連動</h4>
                         <p>世界経済の動向を反映しやすく、トレンドが明確に現れやすい特徴があります。</p>
                     </div>
                 </div>
 
-                <h3>📐 25日移動平均線（25MA）とは</h3>
+                <h3>25日移動平均線（25MA）とは</h3>
                 <p>
                     25日移動平均線は、過去25営業日の終値の平均値を結んだ線です。
                     株価のトレンド（上昇・下落）を判断する最も基本的かつ信頼性の高い指標の一つです。
@@ -466,23 +476,23 @@
                     </ul>
                 </div>
 
-                <h3>🔔 シグナル判定の詳細</h3>
+                <h3>シグナル判定の詳細</h3>
 
-                <h4 style="color: #dc3545; margin-top: 20px;">🟢 買いシグナル（3つの条件すべてを満たす）</h4>
-                <ol style="margin-left: 20px; line-height: 1.8; color: #555;">
+                <h4 style="color: #4a90e2; margin-top: 20px;">買いシグナル（3つの条件すべてを満たす）</h4>
+                <ol style="margin-left: 20px; line-height: 1.8; color: #cccccc;">
                     <li><strong>ゴールデンクロス発生：</strong> 株価が25日移動平均線を下から上に突き抜けた</li>
                     <li><strong>現在値が25MA超：</strong> 現時点で株価が25日移動平均線より上にある</li>
                     <li><strong>25MAが上向き：</strong> 移動平均線自体が上昇トレンドにある（前日より高い）</li>
                 </ol>
                 <div class="highlight-box">
-                    <p style="margin: 0; color: #1976D2;">
-                        <strong>💡 意味：</strong> トレンドが上向きに転換し、上昇の勢いがある状態です。
+                    <p style="margin: 0; color: #4a90e2;">
+                        <strong>意味：</strong> トレンドが上向きに転換し、上昇の勢いがある状態です。
                         「明日の寄り付き（午前9時）に成行で購入」を推奨します。
                     </p>
                 </div>
 
-                <h4 style="color: #007bff; margin-top: 20px;">🔴 売りシグナル（以下のいずれか1つでも該当）</h4>
-                <ol style="margin-left: 20px; line-height: 1.8; color: #555;">
+                <h4 style="color: #dc3545; margin-top: 20px;">売りシグナル（以下のいずれか1つでも該当）</h4>
+                <ol style="margin-left: 20px; line-height: 1.8; color: #cccccc;">
                     <li><strong>デッドクロス発生：</strong> 株価が25日移動平均線を上から下に割り込んだ
                         <ul style="margin-top: 5px;">
                             <li>上昇トレンドが終了し、下落に転じる可能性が高い</li>
@@ -496,15 +506,15 @@
                     </li>
                 </ol>
                 <div class="warning-box">
-                    <p style="margin: 0; color: #856404;">
-                        <strong>⚠️ 重要：</strong> 売りシグナルが出たら、感情に流されず機械的に売却することが、
+                    <p style="margin: 0; color: #ffc107;">
+                        <strong>重要：</strong> 売りシグナルが出たら、感情に流されず機械的に売却することが、
                         長期的な資産保全につながります。
                     </p>
                 </div>
 
-                <h3>🤖 自動化の仕組み</h3>
+                <h3>自動化の仕組み</h3>
                 <p>このシステムは以下の流れで毎日自動的に動作します：</p>
-                <ol style="margin-left: 20px; line-height: 1.8; color: #555;">
+                <ol style="margin-left: 20px; line-height: 1.8; color: #cccccc;">
                     <li><strong>市場終了後（17:00）：</strong> cron（スケジューラー）により自動起動</li>
                     <li><strong>データ取得：</strong> Yahoo Financeから4銘柄の最新株価データを取得</li>
                     <li><strong>分析実行：</strong> 25日移動平均線を計算し、売買シグナルを判定</li>
@@ -512,9 +522,9 @@
                     <li><strong>Web公開：</strong> このページを自動更新し、GitHub Pagesで公開</li>
                 </ol>
 
-                <h3>⚠️ 重要な注意事項</h3>
+                <h3>重要な注意事項</h3>
                 <div class="warning-box">
-                    <ul style="margin: 10px 0 0 20px; color: #856404;">
+                    <ul style="margin: 10px 0 0 20px; color: #cccccc;">
                         <li><strong>投資助言ではありません：</strong> このシステムは過去データに基づく機械的な判定であり、
                             将来の株価を保証するものではありません</li>
                         <li><strong>最終判断はご自身で：</strong> 投資判断および投資結果の責任は、すべてご自身に帰属します</li>
@@ -524,40 +534,40 @@
                     </ul>
                 </div>
 
-                <h3>📚 参考：監視銘柄の優先順位</h3>
+                <h3>参考：監視銘柄の優先順位</h3>
                 <table style="width: 100%; margin-top: 15px; border-collapse: collapse;">
                     <thead>
-                        <tr style="background: #f8f9fa;">
-                            <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">ランク</th>
-                            <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">銘柄</th>
-                            <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">理由</th>
+                        <tr style="background: #0a0a0a;">
+                            <th style="padding: 10px; text-align: left; border-bottom: 2px solid #333; color: #ffffff;">ランク</th>
+                            <th style="padding: 10px; text-align: left; border-bottom: 2px solid #333; color: #ffffff;">銘柄</th>
+                            <th style="padding: 10px; text-align: left; border-bottom: 2px solid #333; color: #ffffff;">理由</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">
+                            <td style="padding: 10px; border-bottom: 1px solid #333;">
                                 <span class="rank-badge rank-SS">SS</span>
                             </td>
-                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">丸紅 (8002.T)</td>
-                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6; color: #555;">
+                            <td style="padding: 10px; border-bottom: 1px solid #333; color: #ffffff;">丸紅 (8002.T)</td>
+                            <td style="padding: 10px; border-bottom: 1px solid #333; color: #cccccc;">
                                 最優先監視銘柄。電力・インフラに強み
                             </td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">
+                            <td style="padding: 10px; border-bottom: 1px solid #333;">
                                 <span class="rank-badge rank-S">S</span>
                             </td>
-                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">三井物産 (8031.T)</td>
-                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6; color: #555;">
+                            <td style="padding: 10px; border-bottom: 1px solid #333; color: #ffffff;">三井物産 (8031.T)</td>
+                            <td style="padding: 10px; border-bottom: 1px solid #333; color: #cccccc;">
                                 資源・エネルギーに強み。安定配当
                             </td>
                         </tr>
                         <tr>
-                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">
+                            <td style="padding: 10px; border-bottom: 1px solid #333;">
                                 <span class="rank-badge rank-A">A</span>
                             </td>
-                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">三菱商事 (8058.T)</td>
-                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6; color: #555;">
+                            <td style="padding: 10px; border-bottom: 1px solid #333; color: #ffffff;">三菱商事 (8058.T)</td>
+                            <td style="padding: 10px; border-bottom: 1px solid #333; color: #cccccc;">
                                 業界最大手。総合力が高い
                             </td>
                         </tr>
@@ -565,8 +575,8 @@
                             <td style="padding: 10px;">
                                 <span class="rank-badge rank-B">B</span>
                             </td>
-                            <td style="padding: 10px;">双日 (2768.T)</td>
-                            <td style="padding: 10px; color: #555;">
+                            <td style="padding: 10px; color: #ffffff;">双日 (2768.T)</td>
+                            <td style="padding: 10px; color: #cccccc;">
                                 中堅商社。成長性に期待
                             </td>
                         </tr>
